@@ -7,4 +7,5 @@ public class Message
     public DateTime Date { get; set; }
     public Event Event { get; set; }
     public string Content { get; set; }
+    public bool Read { get; set; }
 }
