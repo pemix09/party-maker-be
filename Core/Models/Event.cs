@@ -1,4 +1,7 @@
+using System;
+
 namespace Core.Models;
+using System.Collections.Generic;
 
 public class Event
 {
