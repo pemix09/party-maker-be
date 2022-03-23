@@ -26,6 +26,8 @@ namespace Persistence.DbContext
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PartyMakerDbContext).Assembly);
         }
+        
+        
 
     }
 }
