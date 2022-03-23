@@ -1,4 +1,7 @@
 # party-maker-be
 backend app of Party Maker app
 
-## App made for comercial use
+## How to test endpoints => use Swagger
+Just go to backendaddress/swagger
+
+example: https://localhost:7101/swagger
