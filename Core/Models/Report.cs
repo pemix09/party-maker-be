@@ -7,7 +7,7 @@ public class Report
 {
     [Required]
     [Key]
-    public uint Id { get; private set; }
+    public int Id { get; private set; }
     
     [Required]
     public int ReporterId { get; private set; }
@@ -22,6 +22,8 @@ public class Report
     public string Reason { get; private set; }
 
     public void SetReason(string newReason) => this.Reason = newReason;
+    public void SetReportedId(int newReportedId) => this.ReportedId = newReportedId;
+    public void SetReporterId(int newReporterId) => this.ReporterId = newReporterId;
     private Report(){}
     private Report(int reporterId, int reportedId, string reason)
     {
