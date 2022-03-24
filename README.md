@@ -9,3 +9,11 @@ it will download needed packages
 Just go to backendaddress/swagger
 
 example: https://localhost:7101/swagger
+
+## Addresses of deployed apps:
+
+### BackEnd
+https://party-maker-be.herokuapp.com/ 
+
+### FrontEnd
+https://party-maker-fe.herokuapp.com/ 
