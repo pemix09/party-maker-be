@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 builder.Services.AddDbContext<PartyMakerDbContext>(options =>
 {
     options.UseNpgsql(GetConnectionString());

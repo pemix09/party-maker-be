@@ -18,6 +18,7 @@ public class Notification
     public bool Read { get; private set; }
 
     public void SetRead() => this.Read = true;
+    public Notification(){}
     private Notification(Event _event, int _receiverId, string _content)
     {
         this.Event = _event;
