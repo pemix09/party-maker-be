@@ -52,6 +52,7 @@ string GetConnectionString()
     foreach (string key in dataBaseConfig)
     {
         connectionString += key;
+        connectionString += ";";
     }
     
     return connectionString;
