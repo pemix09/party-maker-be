@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence.DbContext;
 
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 builder.Services.AddDbContext<PartyMakerDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("HerokuPostgreSQL"));
+    options.UseNpgsql(GetConnectionString());
 });
 builder.Services.AddSwaggerGen();
 
@@ -43,3 +43,17 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+string GetConnectionString()
+{
+    List<string> dataBaseConfig = configuration.GetSection("DataBase").Get<List<string>>();
+    string connectionString = "";
+
+    foreach (string key in dataBaseConfig)
+    {
+        connectionString += key;
+        connectionString += ";";
+    }
+    
+    return connectionString;
+}
