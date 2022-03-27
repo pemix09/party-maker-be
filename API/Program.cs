@@ -11,13 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container, unit of work for repository pattern
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddUnitOfWork();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PartyMakerDbContext>(options =>
 {
     options.UseNpgsql(GetConnectionString());
 });
+var assembly = AppDomain.CurrentDomain.Load("HandlersDomain");
+builder.Services.AddMediatR(assembly);
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
