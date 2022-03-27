@@ -21,7 +21,8 @@ public class Event
     
     [Required]
     public int OrganizatorId { get; set; }
-    public List<int> ParticipatorsIds { get; set; }
+    
+    public List<int>? ParticipatorsIds { get; set; }
     
     [Required]
     public int PassId { get; set; }

@@ -1,4 +1,5 @@
 using System.Reflection;
+using Application.Event.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,11 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<PartyMakerDbContext>(options =>
 {
     options.UseNpgsql(GetConnectionString());
+
 });
-var assembly = AppDomain.CurrentDomain.Load("HandlersDomain");
-builder.Services.AddMediatR(assembly);
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+//var assembly = AppDomain.CurrentDomain.Load("HandlersDomain");
+builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
