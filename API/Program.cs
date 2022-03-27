@@ -1,3 +1,5 @@
+using System.Reflection;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container, unit of work for repository pattern
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddUnitOfWork();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PartyMakerDbContext>(options =>
