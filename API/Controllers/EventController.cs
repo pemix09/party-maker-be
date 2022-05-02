@@ -19,5 +19,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<Unit> Create([FromBody] CreateEventCommand command) =>
             await Mediator.Send(command);
+
+        [HttpPut]
+        public async Task<Unit> Update([FromBody] UpdateEventCommand command) =>
+            await Mediator.Send(command);
     }
 }

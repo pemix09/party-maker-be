@@ -12,26 +12,31 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         Context = context;
     }
-    public TEntity Get(int id)
+    public async Task<TEntity> Get(int id)
     {
-        return Context.Set<TEntity>().Find(id);
+        return await Context.Set<TEntity>().FindAsync(id);
     }
 
-    public IEnumerable<TEntity> GetAll()
+    public async Task<IEnumerable<TEntity>> GetAll()
     {
-        return Context.Set<TEntity>().ToList();
+        return await Context.Set<TEntity>().ToListAsync();
     }
 
-    public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+    public async Task<IEnumerable<TEntity>> Find(Expression<Func<TEntity, bool>> predicate)
     {
-        return Context.Set<TEntity>().Where(predicate);
+        return await Context.Set<TEntity>()
+            .Where(predicate).ToListAsync();
     }
 
-    public void Add(TEntity entity)
+    public async Task Add(TEntity entity)
     {
-        Context.Set<TEntity>().Add(entity);
+        await Context.Set<TEntity>().AddAsync(entity);
     }
 
+    public void Update(TEntity entity)
+    {
+        Context.Set<TEntity>().Update(entity);
+    }
     public void AddRange(IEnumerable<TEntity> entities)
     {
         Context.Set<TEntity>().AddRange(entities);
