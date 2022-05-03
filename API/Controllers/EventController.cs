@@ -34,5 +34,9 @@ namespace API.Controllers
         [HttpGet]
         public async Task<Event> GetById([FromQuery] GetEventByIdQuery query) =>
             await Mediator.Send(query);
+
+        [HttpGet]
+        public async Task<IEnumerable<Event>> GetAll([FromQuery] GetAllEventsQuery query) =>
+            await Mediator.Send(query);
     }
 }
