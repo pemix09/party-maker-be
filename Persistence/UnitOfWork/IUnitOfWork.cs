@@ -5,6 +5,7 @@ namespace Persistence.UnitOfWork;
 public interface IUnitOfWork : IDisposable
 {
     IEventRepository Events { get; }
-    int Complete();
+    IMessageRepository Messages { get; }
+    Task<int> Complete();
 
 }

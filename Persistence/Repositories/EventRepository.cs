@@ -20,6 +20,7 @@ public class EventRepository : Repository<Event>, IEventRepository
 
     public IEnumerable<Event> GetOrganizerEvents(int organizerId)
     {
-        return PartyMakerDbContext.Events.Where(e => e.OrganizatorId == organizerId);
+        return PartyMakerDbContext.Events
+            .Where(e => e.OrganizatorId == organizerId);
     }
 }

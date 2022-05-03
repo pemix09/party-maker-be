@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Reflection;
 using Application.Event.Commands;
 using MediatR;
@@ -7,12 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence.DbContext;
 using Persistence.UnitOfWork;
+using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container, unit of work for repository pattern
-builder.Services.AddUnitOfWork();
+builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PartyMakerDbContext>(options =>
 {
@@ -40,6 +42,13 @@ else
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .WithOrigins(GetFrontEndAddress(), "http://localhost:7101")
+    .SetIsOriginAllowed(_ => true)
+    .AllowCredentials()
+);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -65,4 +74,11 @@ string GetConnectionString()
     }
     
     return connectionString;
+}
+
+string GetFrontEndAddress()
+{
+    string frontAddress = configuration.GetSection("FrontEndAddress").Key;
+
+    return frontAddress;
 }
