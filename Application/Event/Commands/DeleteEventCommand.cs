@@ -3,11 +3,11 @@ using MediatR;
 using Persistence.UnitOfWork;
 using Core.Models;
 
-public class UpdateEventCommand : IRequest<Unit>
+public class DeleteEventCommand : IRequest<Unit>
 {
-    public Event Edited { get; init; }
+    public int EventId { get; init; }
 
-    public class Handler : IRequestHandler<UpdateEventCommand, Unit>
+    public class Handler : IRequestHandler<DeleteEventCommand, Unit>
     {
         private readonly IUnitOfWork UnitOfWork;
             
@@ -16,13 +16,13 @@ public class UpdateEventCommand : IRequest<Unit>
             UnitOfWork = unitOfWork;
         }
         
-        public async Task<Unit> Handle(UpdateEventCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteEventCommand request, CancellationToken cancellationToken)
         {
-            UnitOfWork.Events.Update(request.Edited);
+            Event entity = await UnitOfWork.Events.Get(request.EventId);
+            UnitOfWork.Events.Remove(entity);
             await UnitOfWork.Complete();
 
             return Unit.Value;
         }
     }
-
 }

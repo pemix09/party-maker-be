@@ -8,6 +8,7 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly PartyMakerDbContext Context;
     public IEventRepository Events { get; private set; }
+    public IMessageRepository Messages { get; private set; }
 
     public UnitOfWork(PartyMakerDbContext context)
     {
@@ -15,14 +16,15 @@ public class UnitOfWork : IUnitOfWork
         
         //here we can add more repositories
         Events = new EventRepository(Context);
+        Messages = new MessageRepository(Context);
     }
-    public void Dispose()
+    public async void Dispose()
     {
-        Context.Dispose();
+        await Context.DisposeAsync();
     }
 
-    public int Complete()
+    public async Task<int> Complete()
     {
-        return Context.SaveChanges();
+        return await Context.SaveChangesAsync();
     }
 }

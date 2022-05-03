@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container, unit of work for repository pattern
-builder.Services.AddUnitOfWork();
+builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PartyMakerDbContext>(options =>
 {
