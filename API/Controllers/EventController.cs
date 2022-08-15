@@ -3,40 +3,34 @@ using Core.Models;
 
 namespace API.Controllers
 {
-
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
     using Application.Event.Commands;
     
     [Route("[controller]/[action]")]
     [ApiController]
-    public class EventController : ControllerBase
+    public class EventController : BaseCRUDController
     {
-        private readonly IMediator Mediator;
-
-        public EventController(IMediator mediator)
-        {
-            Mediator = mediator;
-        }
+        public EventController(IMediator _mediator) : base(_mediator) { }
 
         [HttpPost]
         public async Task<Unit> Create([FromBody] CreateEventCommand command) =>
-            await Mediator.Send(command);
+            await mediator.Send(command);
 
         [HttpPut]
         public async Task<Unit> Update([FromBody] UpdateEventCommand command) =>
-            await Mediator.Send(command);
+            await mediator.Send(command);
 
         [HttpDelete]
         public async Task<Unit> Delete([FromQuery] DeleteEventCommand command) =>
-            await Mediator.Send(command);
+            await mediator.Send(command);
 
         [HttpGet]
         public async Task<Event> GetById([FromQuery] GetEventByIdQuery query) =>
-            await Mediator.Send(query);
+            await mediator.Send(query);
 
         [HttpGet]
         public async Task<IEnumerable<Event>> GetAll([FromQuery] GetAllEventsQuery query) =>
-            await Mediator.Send(query);
+            await mediator.Send(query);
     }
 }
