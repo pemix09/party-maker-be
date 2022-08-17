@@ -37,8 +37,8 @@ public class CreateEventCommand : IRequest<Unit>
                 request.Photo,
                 request.MusicGenreId);
 
-            UnitOfWork.Events.Add(_event);
-            UnitOfWork.Complete();
+            await UnitOfWork.Events.Add(_event);
+            await UnitOfWork.Complete();
 
             return Unit.Value;
         }
