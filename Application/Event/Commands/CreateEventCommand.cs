@@ -21,10 +21,9 @@ public class CreateEventCommand : IRequest<Unit>
     public class Handler : IRequestHandler<CreateEventCommand, Unit>
     {
         private readonly EventService eventService;
-            
-        public Handler(IUnitOfWork unitOfWork)
+        public Handler(EventService _eventService)
         {
-            eventService = new EventService(unitOfWork);
+            eventService = _eventService;
         }
         public async Task<Unit> Handle(CreateEventCommand request, CancellationToken cancellationToken)
         {

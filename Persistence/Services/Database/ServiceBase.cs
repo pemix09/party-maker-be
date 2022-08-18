@@ -1,13 +1,13 @@
 ﻿namespace Persistence.Services.Database
 {
+    using Persistence.DbContext;
     using Persistence.UnitOfWork;
     public class ServiceBase
     {
         protected readonly IUnitOfWork database;
-
-        protected ServiceBase(IUnitOfWork _UnitOfWork)
+        protected ServiceBase(PartyMakerDbContext context)
         {
-            database = _UnitOfWork;
+            database = new UnitOfWork(context);
         }
     }
 }

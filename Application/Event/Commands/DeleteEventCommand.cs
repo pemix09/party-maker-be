@@ -1,7 +1,7 @@
 namespace Application.Event.Commands;
 using MediatR;
 using Persistence.UnitOfWork;
-using Core.Models;
+using Persistence.Services.Database;
 
 public class DeleteEventCommand : IRequest<Unit>
 {
@@ -9,18 +9,15 @@ public class DeleteEventCommand : IRequest<Unit>
 
     public class Handler : IRequestHandler<DeleteEventCommand, Unit>
     {
-        private readonly IUnitOfWork UnitOfWork;
-            
-        public Handler(IUnitOfWork unitOfWork)
+        private readonly EventService eventService;
+        public Handler(EventService _eventService)
         {
-            UnitOfWork = unitOfWork;
+            eventService = _eventService;
         }
-        
+
         public async Task<Unit> Handle(DeleteEventCommand request, CancellationToken cancellationToken)
         {
-            Event entity = await UnitOfWork.Events.Get(request.EventId);
-            UnitOfWork.Events.Remove(entity);
-            await UnitOfWork.Complete();
+            await eventService.DeleteFromDataBase(request.EventId);
 
             return Unit.Value;
         }

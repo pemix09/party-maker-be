@@ -2,9 +2,11 @@
 {
     using Persistence.UnitOfWork;
     using Core.Models;
+    using Persistence.DbContext;
+
     public class EventService : ServiceBase
     {
-        public EventService(IUnitOfWork _UnitOfWork) : base(_UnitOfWork) { }
+        public EventService(PartyMakerDbContext _context) : base(_context) { }
         public async Task AddToDataBase(Event _event)
         {
             await database.Events.Add(_event);
@@ -16,7 +18,7 @@
             database.Events.Update(_edited);
             await database.Complete();
         }
-        public async Task DeleteInDataBase(int _id)
+        public async Task DeleteFromDataBase(int _id)
         {
             Event toDelete = await database.Events.Get(_id);
             database.Events.Remove(toDelete);

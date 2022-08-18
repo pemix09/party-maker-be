@@ -2,6 +2,7 @@ namespace Application.Event.Queries;
 using Persistence.UnitOfWork;
 using MediatR;
 using Core.Models;
+using Persistence.Services.Database;
 
 public class GetEventByIdQuery : IRequest<Event>
 {
@@ -9,16 +10,14 @@ public class GetEventByIdQuery : IRequest<Event>
 
     public class Handler : IRequestHandler<GetEventByIdQuery, Event>
     {
-        private readonly IUnitOfWork UnitOfWork;
-            
-        public Handler(IUnitOfWork unitOfWork)
+        private readonly EventService eventService;
+        public Handler(EventService _eventService)
         {
-            UnitOfWork = unitOfWork;
+            eventService = _eventService;
         }
-        
         public async Task<Event> Handle(GetEventByIdQuery request, CancellationToken cancellationToken)
         {
-            var entity = await UnitOfWork.Events.Get(request.EventId);
+            var entity = await eventService.GetByIdFromDataBase(request.EventId);
             
             return entity;
         }

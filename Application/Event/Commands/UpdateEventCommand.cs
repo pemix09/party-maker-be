@@ -1,7 +1,7 @@
 namespace Application.Event.Commands;
 using MediatR;
-using Persistence.UnitOfWork;
 using Core.Models;
+using Persistence.Services.Database;
 
 public class UpdateEventCommand : IRequest<Unit>
 {
@@ -9,17 +9,15 @@ public class UpdateEventCommand : IRequest<Unit>
 
     public class Handler : IRequestHandler<UpdateEventCommand, Unit>
     {
-        private readonly IUnitOfWork UnitOfWork;
-            
-        public Handler(IUnitOfWork unitOfWork)
+        private readonly EventService eventService;
+        public Handler(EventService _eventService)
         {
-            UnitOfWork = unitOfWork;
+            eventService = _eventService;
         }
-        
+
         public async Task<Unit> Handle(UpdateEventCommand request, CancellationToken cancellationToken)
         {
-            UnitOfWork.Events.Update(request.Edited);
-            await UnitOfWork.Complete();
+            await eventService.UpdateInDataBase(request.Edited);
 
             return Unit.Value;
         }

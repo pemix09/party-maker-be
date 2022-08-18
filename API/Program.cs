@@ -7,20 +7,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence.DbContext;
+using Persistence.Services.Database;
 using Persistence.UnitOfWork;
 using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
-// Add services to the container, unit of work for repository pattern
-builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PartyMakerDbContext>(options =>
 {
     options.UseNpgsql(GetConnectionString());
 
 });
+builder.Services.AddScoped<EventService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 //var assembly = AppDomain.CurrentDomain.Load("HandlersDomain");
 builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
