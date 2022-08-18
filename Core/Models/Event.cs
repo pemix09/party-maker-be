@@ -9,7 +9,10 @@ public class Event
     [Required]
     [Key]
     public int Id { get; set; }
-    
+
+    [Required]
+    public string Name { get; set; }
+
     [Required]
     public string Description { get; set; }
     
@@ -31,6 +34,7 @@ public class Event
 
     public Event(){}
     private Event(
+        string name,
         string description,
         string place,
         int organizatorId,
@@ -38,6 +42,7 @@ public class Event
         string photo,
         int musicGenreId)
     {
+        Name = name;
         this.Description = description;
         this.Date = DateTime.Now;
         this.Place = place;
@@ -48,6 +53,7 @@ public class Event
     }
 
     public static Event Create(
+        string name,
         string description,
         string place,
         int organizatorId,
@@ -56,6 +62,6 @@ public class Event
         int musicGenreId
     )
     {
-        return new Event(description, place, organizatorId, EntrancePassId, photo, musicGenreId);
+        return new Event(name,description, place, organizatorId, EntrancePassId, photo, musicGenreId);
     }
 }
