@@ -6,6 +6,7 @@ using Application.Event.Validators;
 using FluentValidation;
 using Persistence.UnitOfWork;
 using Core.Models;
+using Persistence.Services.Database;
 
 public class CreateEventCommand : IRequest<Unit>
 {
@@ -19,11 +20,11 @@ public class CreateEventCommand : IRequest<Unit>
 
     public class Handler : IRequestHandler<CreateEventCommand, Unit>
     {
-        private readonly IUnitOfWork UnitOfWork;
+        private readonly EventService eventService;
             
         public Handler(IUnitOfWork unitOfWork)
         {
-            UnitOfWork = unitOfWork;
+            eventService = new EventService(unitOfWork);
         }
         public async Task<Unit> Handle(CreateEventCommand request, CancellationToken cancellationToken)
         {
@@ -37,8 +38,7 @@ public class CreateEventCommand : IRequest<Unit>
                 request.Photo,
                 request.MusicGenreId);
 
-            await UnitOfWork.Events.Add(_event);
-            await UnitOfWork.Complete();
+            await eventService.Create(_event);
 
             return Unit.Value;
         }
