@@ -38,7 +38,7 @@ public class CreateEventCommand : IRequest<Unit>
                 request.Photo,
                 request.MusicGenreId);
 
-            await eventService.Create(_event);
+            await eventService.AddToDataBase(_event);
 
             return Unit.Value;
         }
