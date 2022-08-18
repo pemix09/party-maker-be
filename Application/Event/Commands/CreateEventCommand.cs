@@ -30,7 +30,6 @@ public class CreateEventCommand : IRequest<Unit>
             await new CreateEventValidator().ValidateAndThrowAsync(request, cancellationToken);
             
             Event _event = Event.Create(
-                request.Name,
                 request.Description,
                 request.Place,
                 request.OrganizerId,

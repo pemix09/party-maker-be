@@ -168,10 +168,6 @@ namespace Persistence.Migrations
                     b.Property<int>("MusicGenreId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("OrganizatorId")
                         .HasColumnType("integer");
 
