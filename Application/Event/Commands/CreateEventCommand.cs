@@ -21,7 +21,6 @@ public class CreateEventCommand : IRequest<Unit>
     public class Handler : IRequestHandler<CreateEventCommand, Unit>
     {
         private readonly EventService eventService;
-            
         public Handler(IUnitOfWork unitOfWork)
         {
             eventService = new EventService(unitOfWork);
