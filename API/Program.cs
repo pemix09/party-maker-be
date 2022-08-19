@@ -21,8 +21,8 @@ builder.Services.AddDbContext<PartyMakerDbContext>(options =>
 
 });
 builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<MessageService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-//var assembly = AppDomain.CurrentDomain.Load("HandlersDomain");
 builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
 builder.Services.AddSwaggerGen();
 
