@@ -10,15 +10,16 @@ public class UnitOfWork : IUnitOfWork
     public IEventRepository Events { get; private set; }
     public IMessageRepository Messages { get; private set; }
     public IBanRepository Bans { get; private set; }
+    public IEntrancePassRepository EntrancePasses { get; private set; }
 
     public UnitOfWork(PartyMakerDbContext context)
     {
         Context = context;
         
-        //here we can add more repositories
         Events = new EventRepository(Context);
         Messages = new MessageRepository(Context);
         Bans = new BanRepository(context);
+        EntrancePasses = new EntrancePassRepository(Context);
     }
     public async void Dispose()
     {
