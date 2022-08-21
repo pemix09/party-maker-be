@@ -1,11 +1,11 @@
-using Application.Event.Queries;
+using Application.Message.Queries;
 using Core.Models;
 
 namespace API.Controllers
 {
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using Application.Event.Commands;
+    using Application.Message.Commands;
     
     [Route("[controller]/[action]")]
     [ApiController]

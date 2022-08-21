@@ -6,28 +6,30 @@ namespace Persistence.UnitOfWork;
 //Unit of work contains repositories, we use it for every data operations.
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly PartyMakerDbContext Context;
+    private readonly PartyMakerDbContext context;
     public IEventRepository Events { get; private set; }
     public IMessageRepository Messages { get; private set; }
     public IBanRepository Bans { get; private set; }
     public IEntrancePassRepository EntrancePasses { get; private set; }
+    public IMusicGenreRepository MusicGenres { get; private set; }
 
-    public UnitOfWork(PartyMakerDbContext context)
+    public UnitOfWork(PartyMakerDbContext _context)
     {
-        Context = context;
+        context = _context;
         
-        Events = new EventRepository(Context);
-        Messages = new MessageRepository(Context);
+        Events = new EventRepository(context);
+        Messages = new MessageRepository(context);
         Bans = new BanRepository(context);
-        EntrancePasses = new EntrancePassRepository(Context);
+        EntrancePasses = new EntrancePassRepository(context);
+        MusicGenres = new MusicGenreRepository(context);
     }
     public async void Dispose()
     {
-        await Context.DisposeAsync();
+        await context.DisposeAsync();
     }
 
     public async Task<int> Complete()
     {
-        return await Context.SaveChangesAsync();
+        return await context.SaveChangesAsync();
     }
 }

@@ -1,6 +1,6 @@
 using System.Configuration;
 using System.Reflection;
-using Application.Event.Commands;
+using Application.Message.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

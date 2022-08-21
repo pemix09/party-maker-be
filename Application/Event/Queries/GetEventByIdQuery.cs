@@ -1,4 +1,4 @@
-namespace Application.Event.Queries;
+namespace Application.Message.Queries;
 using Persistence.UnitOfWork;
 using MediatR;
 using Core.Models;

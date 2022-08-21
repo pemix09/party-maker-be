@@ -1,8 +1,8 @@
 
 
-namespace Application.Event.Commands;
+namespace Application.Message.Commands;
 using MediatR;
-using Application.Event.Validators;
+using Application.Message.Validators;
 using FluentValidation;
 using Persistence.UnitOfWork;
 using Core.Models;

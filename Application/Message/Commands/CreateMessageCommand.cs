@@ -24,7 +24,7 @@
             {
                 await new CreateMessageValidator().ValidateAndThrowAsync(request, cancellationToken);
 
-                Message message = Message.
+                Message message = Message.Cre
             }
         }
     }

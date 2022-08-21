@@ -1,4 +1,4 @@
-namespace Application.Event.Commands;
+namespace Application.Message.Commands;
 using MediatR;
 using Persistence.UnitOfWork;
 using Persistence.Services.Database;
