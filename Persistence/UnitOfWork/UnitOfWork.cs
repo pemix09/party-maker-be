@@ -12,6 +12,8 @@ public class UnitOfWork : IUnitOfWork
     public IBanRepository Bans { get; private set; }
     public IEntrancePassRepository EntrancePasses { get; private set; }
     public IMusicGenreRepository MusicGenres { get; private set; }
+    public INotificationRepository Notifications { get; private set; }
+    public IReportRepository Reports { get; private set; }
 
     public UnitOfWork(PartyMakerDbContext _context)
     {
@@ -22,6 +24,8 @@ public class UnitOfWork : IUnitOfWork
         Bans = new BanRepository(context);
         EntrancePasses = new EntrancePassRepository(context);
         MusicGenres = new MusicGenreRepository(context);
+        Notifications = new NotificationRepository(context);
+        Reports = new ReportRepository(context);
     }
     public async void Dispose()
     {

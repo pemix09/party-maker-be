@@ -9,6 +9,8 @@ public interface IUnitOfWork : IDisposable
     IBanRepository Bans { get; }
     IEntrancePassRepository EntrancePasses { get; }
     IMusicGenreRepository MusicGenres { get; }
+    INotificationRepository Notifications { get; }
+    IReportRepository Reports { get; }
     Task<int> Complete();
 
 }
