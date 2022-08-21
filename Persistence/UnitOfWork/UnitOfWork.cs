@@ -9,6 +9,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly PartyMakerDbContext Context;
     public IEventRepository Events { get; private set; }
     public IMessageRepository Messages { get; private set; }
+    public IBanRepository Bans { get; private set; }
 
     public UnitOfWork(PartyMakerDbContext context)
     {
@@ -17,6 +18,7 @@ public class UnitOfWork : IUnitOfWork
         //here we can add more repositories
         Events = new EventRepository(Context);
         Messages = new MessageRepository(Context);
+        Bans = new BanRepository(context);
     }
     public async void Dispose()
     {

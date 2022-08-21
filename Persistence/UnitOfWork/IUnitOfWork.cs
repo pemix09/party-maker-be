@@ -6,6 +6,7 @@ public interface IUnitOfWork : IDisposable
 {
     IEventRepository Events { get; }
     IMessageRepository Messages { get; }
+    IBanRepository Bans { get; }
     Task<int> Complete();
 
 }
