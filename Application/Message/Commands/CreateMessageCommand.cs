@@ -24,7 +24,10 @@
             {
                 await new CreateMessageValidator().ValidateAndThrowAsync(request, cancellationToken);
 
-                Message message = Message.Cre
+                Message message = Message.Create(request.SenderId, request.ReceiverId, request.EventId, request.Content);
+                await messageService.AddToDataBase(message);
+
+                return Unit.Value;
             }
         }
     }

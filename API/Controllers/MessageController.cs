@@ -6,6 +6,8 @@
     using Application.Message.Commands;
     using Application.Message.Queries;
 
+    [Route("[controller]/[action]")]
+    [ApiController]
     public class MessageController : BaseCRUDController
     {
         public MessageController(IMediator _mediator) : base(_mediator) { }

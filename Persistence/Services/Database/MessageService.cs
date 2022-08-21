@@ -17,14 +17,14 @@
             database.Messages.Update(_edited);
             await database.Complete();
         }
-        public async Task DeleteFromDataBase(int _id)
+        public async Task DeleteFromDataBase(long _id)
         {
             Message toDelete = await database.Messages.Get(_id);
             database.Messages.Remove(toDelete);
             await database.Complete();
         }
 
-        public async Task<Message> GetByIdFromDataBase(int _id)
+        public async Task<Message> GetByIdFromDataBase(long _id)
         {
             return await database.Messages.Get(_id);
         }
