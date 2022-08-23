@@ -6,10 +6,10 @@ namespace Core.Models;
 
 public class Message
 {
-    [Key]
     [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    private long Id { get; set; }
+    [Key]
+    public long Id { get; set; }
     
     [Required]
     private string SenderId { get; set; }
@@ -26,6 +26,7 @@ public class Message
     [Required]
     private string Content { get; set; }
     private bool Read { get; set; }
+    public Message() { }
     private Message(string _senderId, string _receiverId, int _eventID, string _content)
     {
         SenderId = _senderId;

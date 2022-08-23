@@ -8,8 +8,10 @@ namespace Application.Message.Validators
         public DeleteMessageValidator()
         {
             RuleFor(x => x.Id)
-                .NotEmpty()
-                .WithMessage("Id for message to delete have to be provided!");
+                .NotNull()
+                .WithMessage("Id for message to delete have to be provided!")
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Message Id have to bigger or equal to 0!");
         }
     }
 }

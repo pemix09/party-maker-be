@@ -1,6 +1,7 @@
 using System.Configuration;
 using System.Reflection;
 using Application.Message.Commands;
+using Infrastructure.Middlewares;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +50,7 @@ app.UseCors(x => x
     .SetIsOriginAllowed(_ => true)
     .AllowCredentials()
 );
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

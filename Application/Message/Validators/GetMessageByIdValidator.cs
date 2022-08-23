@@ -8,7 +8,7 @@ namespace Application.Message.Validators
         public GetMessageByIdValidator()
         {
             RuleFor(x => x.Id)
-                .NotEmpty()
+                .GreaterThanOrEqualTo(0)
                 .WithMessage("Message id cannot be empty!");
         }
     }

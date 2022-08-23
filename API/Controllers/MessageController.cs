@@ -13,23 +13,39 @@
         public MessageController(IMediator _mediator) : base(_mediator) { }
 
         [HttpPost]
-        public async Task<Unit> Create([FromBody] CreateMessageCommand command) =>
+        public async Task<ActionResult> Create([FromBody] CreateMessageCommand command)
+        {
             await mediator.Send(command);
+            return Ok();
+        }
 
         [HttpPut]
-        public async Task<Unit> Update([FromBody] UpdateMessageCommand command) =>
+        public async Task<ActionResult> Update([FromBody] UpdateMessageCommand command)
+        {
             await mediator.Send(command);
+            return Ok();
+        }
 
         [HttpDelete]
-        public async Task<Unit> Delete([FromQuery] DeleteMessageCommand command) =>
+        public async Task<ActionResult> Delete([FromQuery] DeleteMessageCommand command)
+        {
             await mediator.Send(command);
+            return Ok();
+        }
 
         [HttpGet]
-        public async Task<Message> GetById([FromQuery] GetMessageByIdQuery query) =>
-            await mediator.Send(query);
+        public async Task<ActionResult<Message>> GetById([FromQuery] GetMessageByIdQuery query)
+        {
+            Message message = await mediator.Send(query);
+            return Ok(message);
+        }
 
         [HttpGet]
-        public async Task<IEnumerable<Message>> GetAllByUser([FromQuery] GetAllMessagesQuery query) =>
-            await mediator.Send(query);
+        public async Task<ActionResult<IEnumerable<Message>>> GetAllByUser([FromQuery] GetAllMessagesQuery query)
+        {
+            IEnumerable<Message> messages = await mediator.Send(query);
+            return Ok(messages);
+
+        }
     }
 }
