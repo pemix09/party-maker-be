@@ -18,7 +18,7 @@ namespace Application.Message.Validators
                 .WithMessage("Receiver Id cannot be empty!");
             RuleFor(x => x.EventId)
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("Event Id cannot be empty!");
+                .WithMessage("Invalid event Id!");
         }
     }
 }

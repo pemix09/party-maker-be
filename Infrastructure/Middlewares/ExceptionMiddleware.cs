@@ -25,17 +25,17 @@ namespace Infrastructure.Middlewares
             catch(Exception ex)
             {
                 //logger.LogError($"Something went wrong");
-                await HandleExceptionAsync(_httpContext);
+                await HandleExceptionAsync(_httpContext, ex.Message);
             }
         }
 
         //method below should be other class that handles errors
-        private Task HandleExceptionAsync(HttpContext _httpContext)
+        private Task HandleExceptionAsync(HttpContext _httpContext, string _message)
         {
             _httpContext.Response.ContentType = "application/json";
             _httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            ErrorDetails errorDetails = new ErrorDetails(_httpContext.Response.StatusCode, "Internal server error");
+            ErrorDetails errorDetails = new ErrorDetails(_httpContext.Response.StatusCode, _message);
 
             return _httpContext.Response.WriteAsync(errorDetails.ToString());
         }
