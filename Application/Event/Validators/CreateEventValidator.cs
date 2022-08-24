@@ -1,6 +1,6 @@
-using Application.Event.Commands;
+using Application.Message.Commands;
 
-namespace Application.Event.Validators;
+namespace Application.Message.Validators;
 using FluentValidation;
 
 public class CreateEventValidator : AbstractValidator<CreateEventCommand>

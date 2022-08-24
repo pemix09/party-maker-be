@@ -1,11 +1,12 @@
 
 
-namespace Application.Event.Commands;
+namespace Application.Message.Commands;
 using MediatR;
-using Application.Event.Validators;
+using Application.Message.Validators;
 using FluentValidation;
 using Persistence.UnitOfWork;
 using Core.Models;
+using Persistence.Services.Database;
 
 public class CreateEventCommand : IRequest<Unit>
 {
@@ -19,11 +20,10 @@ public class CreateEventCommand : IRequest<Unit>
 
     public class Handler : IRequestHandler<CreateEventCommand, Unit>
     {
-        private readonly IUnitOfWork UnitOfWork;
-            
-        public Handler(IUnitOfWork unitOfWork)
+        private readonly EventService eventService;
+        public Handler(EventService _eventService)
         {
-            UnitOfWork = unitOfWork;
+            eventService = _eventService;
         }
         public async Task<Unit> Handle(CreateEventCommand request, CancellationToken cancellationToken)
         {
@@ -37,8 +37,7 @@ public class CreateEventCommand : IRequest<Unit>
                 request.Photo,
                 request.MusicGenreId);
 
-            UnitOfWork.Events.Add(_event);
-            UnitOfWork.Complete();
+            await eventService.AddToDataBase(_event);
 
             return Unit.Value;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Models;
 
@@ -7,13 +8,14 @@ public class Report
 {
     [Required]
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; private set; }
     
     [Required]
-    public int ReporterId { get; private set; }
+    public string ReporterId { get; private set; }
     
     [Required]
-    public int ReportedId { get; private set; }
+    public string ReportedId { get; private set; }
     
     [Required]
     public DateTime Date { get; private set; }
@@ -21,19 +23,19 @@ public class Report
     [Required]
     public string Reason { get; private set; }
 
-    public void SetReason(string newReason) => this.Reason = newReason;
-    public void SetReportedId(int newReportedId) => this.ReportedId = newReportedId;
-    public void SetReporterId(int newReporterId) => this.ReporterId = newReporterId;
+    public void SetReason(string _newReason) => this.Reason = _newReason;
+    public void SetReportedId(string _newReportedId) => this.ReportedId = _newReportedId;
+    public void SetReporterId(string _newReporterId) => this.ReporterId = _newReporterId;
     private Report(){}
-    private Report(int reporterId, int reportedId, string reason)
+    private Report(string _reporterId, string _reportedId, string _reason)
     {
-        this.ReporterId = reporterId;
-        this.ReportedId = reportedId;
-        this.Reason = reason;
+        this.ReporterId = _reporterId;
+        this.ReportedId = _reportedId;
+        this.Reason = _reason;
         this.Date = DateTime.Now;
     }
 
-    public static Report Create(int reporterId, int reportedId, string reason)
+    public static Report Create(string reporterId, string reportedId, string reason)
     {
         return new Report(reporterId, reportedId, reason);
     }

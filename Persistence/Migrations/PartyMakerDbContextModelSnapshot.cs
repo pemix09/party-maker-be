@@ -213,15 +213,15 @@ namespace Persistence.Migrations
                     b.Property<bool>("Read")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<int>("SenderId")
-                        .HasColumnType("integer");
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EventId");
 
                     b.ToTable("Messages");
                 });
@@ -261,8 +261,9 @@ namespace Persistence.Migrations
                     b.Property<bool>("Read")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -286,11 +287,13 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ReportedId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ReportedId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<int>("ReporterId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ReporterId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -434,17 +437,6 @@ namespace Persistence.Migrations
                     b.HasOne("Core.Models.AppUser", null)
                         .WithMany("Followed")
                         .HasForeignKey("AppUserId");
-                });
-
-            modelBuilder.Entity("Core.Models.Message", b =>
-                {
-                    b.HasOne("Core.Models.Event", "Event")
-                        .WithMany()
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("Core.Models.Notification", b =>

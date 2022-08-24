@@ -11,4 +11,8 @@ public class MessageRepository : Repository<Message>, IMessageRepository
     {
         get {return Context as PartyMakerDbContext;}
     }
+    public async Task<Message> Get(long _id)
+    {
+        return await PartyMakerDbContext.Messages.FindAsync(_id);
+    }
 }
