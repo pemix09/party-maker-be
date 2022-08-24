@@ -1,5 +1,5 @@
 #commit message:
-$CommitMessage = "Added powershell script to run app"
+$CommitMessage = "Added powershell script to create migration and update database"
 
 #add all files to commit:
 git add .
