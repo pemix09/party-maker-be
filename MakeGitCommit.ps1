@@ -1,5 +1,5 @@
 #commit message:
-$CommitMessage = "Ban controller creation"
+$CommitMessage = "Ban model changes"
 
 #add all files to commit:
 git add .
