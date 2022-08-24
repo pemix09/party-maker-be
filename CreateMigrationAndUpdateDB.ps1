@@ -1,8 +1,8 @@
 #not tested
 #migration name:
-$migrationName = "Init"
+$migrationName = "Fix for ban model"
 
 #commands to add migration and update database
-dotnet ef migrations add --startup-project .\Lollipop.API\Lollipop.API.csproj --project .\Lollipop.Persistence\Lollipop.Persistence.csproj $migrationName
-dotnet ef migrations update --startup-project .\Lollipop.API\Lollipop.API.csproj --project .\Lollipop.Persistence\Lollipop.Persistence.csproj
-dotnet ef database update --startup-project .\Lollipop.API\Lollipop.API.csproj --project .\Lollipop.Persistence\Lollipop.Persistence.csproj
+dotnet ef migrations add --startup-project .\API\API.csproj  --project .\Persistence\Persistence.csproj  $migrationName
+dotnet ef database update --startup-project .\API\API.csproj  --project .\Persistence\Persistence.csproj
+
