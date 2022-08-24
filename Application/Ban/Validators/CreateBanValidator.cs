@@ -13,6 +13,9 @@ namespace Application.Ban.Validators
             RuleFor(x => x.End)
                 .GreaterThan(DateTime.Now)
                 .WithMessage("Ending date must be bigger than now!");
+            RuleFor(x => x.BannedUser)
+                .NotEmpty()
+                .WithMessage("Banned user have to be specified!");
         }
     }
 }
