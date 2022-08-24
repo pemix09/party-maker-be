@@ -1,5 +1,5 @@
 #commit message:
-$CommitMessage = "Added powershell script to create migration and update database"
+$CommitMessage = "Ban controller creation"
 
 #add all files to commit:
 git add .
@@ -9,3 +9,6 @@ git commit -m $CommitMessage
 
 #push newly created commit to github:
 git push
+
+#and upload it to heroku(envoke other script):
+& '.\UploadToHeroku.ps1'
