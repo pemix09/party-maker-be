@@ -12,20 +12,20 @@ public class Message
     public long Id { get; set; }
     
     [Required]
-    private string SenderId { get; set; }
+    public string SenderId { get; set; }
     
     [Required]
-    private string ReceiverId { get; set; }
+    public string ReceiverId { get; set; }
     
     [Required]
-    private DateTime Date { get; set; }
+    public DateTime Date { get; set; }
     
     [Required]
-    private int EventId { get; set; }
+    public int EventId { get; set; }
     
     [Required]
-    private string Content { get; set; }
-    private bool Read { get; set; }
+    public string Content { get; set; }
+    public bool Read { get; set; }
     public Message() { }
     private Message(string _senderId, string _receiverId, int _eventID, string _content)
     {
