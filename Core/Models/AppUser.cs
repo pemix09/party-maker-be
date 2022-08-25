@@ -11,4 +11,18 @@ public class AppUser : IdentityUser
     public bool Premium { get; set; }
     public int? BanId { get; set; }
     public List<Event> Followed { get; set; }
+
+    private AppUser(string _email)
+    {
+        base.Email = _email;
+    }
+    public static AppUser Create(string _email)
+    {
+        return new AppUser(_email);
+    }
+
+    public static implicit operator AppUser(IdentityResult v)
+    {
+        throw new NotImplementedException();
+    }
 }
