@@ -30,6 +30,7 @@ public class Event
     public int PassId { get; set; }
     public string Photo { get; set; }
     public int MusicGenreId { get; set; }
+    public string Type { get; set; }
 
     public Event(){}
     private Event(
@@ -38,7 +39,8 @@ public class Event
         int organizatorId,
         int pass,
         string photo,
-        int musicGenreId)
+        int musicGenreId,
+        string type)
     {
         this.Description = description;
         this.Date = DateTime.Now;
@@ -47,6 +49,7 @@ public class Event
         this.PassId = pass;
         this.Photo = photo;
         this.MusicGenreId = musicGenreId;
+        Type = type;
     }
 
     public static Event Create(
@@ -55,9 +58,10 @@ public class Event
         int organizatorId,
         int EntrancePassId,
         string photo,
-        int musicGenreId
+        int musicGenreId,
+        string type
     )
     {
-        return new Event(description, place, organizatorId, EntrancePassId, photo, musicGenreId);
+        return new Event(description, place, organizatorId, EntrancePassId, photo, musicGenreId, type);
     }
 }

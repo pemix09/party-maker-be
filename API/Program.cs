@@ -39,6 +39,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<BanService>();
+builder.Services.AddScoped<UserService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
 builder.Services.AddSwaggerGen();
