@@ -132,7 +132,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bans");
+                    b.ToTable("Bans", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.EntrancePass", b =>
@@ -152,7 +152,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EntrancePasses");
+                    b.ToTable("EntrancePasses", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Event", b =>
@@ -197,7 +197,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Message", b =>
@@ -231,7 +231,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.MusicGenre", b =>
@@ -248,7 +248,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MusicGenres");
+                    b.ToTable("MusicGenres", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Notification", b =>
@@ -277,7 +277,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Report", b =>
@@ -305,7 +305,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reports");
+                    b.ToTable("Reports", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
