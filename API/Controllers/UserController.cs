@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Route("[controller]/[action]")]
+    [ApiController]
     public class UserController : BaseCRUDController
     {
         public UserController(IMediator _mediator) : base(_mediator) { }
@@ -14,6 +16,8 @@ namespace API.Controllers
             await mediator.Send(command);
             return Ok();
         }
+
+        [HttpPost]
         public async Task<IActionResult> Login(LoginUserCommand command)
         {
             await mediator.Send(command);
