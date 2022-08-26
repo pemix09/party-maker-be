@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.User.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,7 +11,8 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterUserCommand command)
         {
-            mediator.Send(command);
+            await mediator.Send(command);
+            return Ok();
         }
     }
 }
