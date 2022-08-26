@@ -29,6 +29,7 @@ namespace Infrastructure.Middlewares
             }
             catch (Exception _ex)
             {
+                Console.WriteLine(_ex.InnerException);
                 //logger.LogError($"Something went wrong");
                 await HandleExceptionAsync(_httpContext, _ex.Message);
             }

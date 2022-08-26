@@ -13,6 +13,9 @@ namespace Application.User.Validators
             RuleFor(x => x.Password)
                 .NotEmpty()
                 .WithMessage("Password for new user have to be provided!");
+            RuleFor(x => x.UserName)
+                .NotEmpty()
+                .WithMessage("Username cannot be empty!");
         }
     }
 }

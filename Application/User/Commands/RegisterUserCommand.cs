@@ -10,6 +10,7 @@ namespace Application.User.Commands
     {
         public string Email { get; init; }
         public string Password { get; init; }
+        public string UserName { get; init; }
 
         public class Handler : IRequestHandler<RegisterUserCommand, Unit>
         {
@@ -22,7 +23,7 @@ namespace Application.User.Commands
             {
                 await new RegisterUserValidator().ValidateAndThrowAsync(request, cancellationToken);
 
-                AppUser newUser = AppUser.Create(request.Email);
+                AppUser newUser = AppUser.Create(request.Email, request.UserName);
 
                 await userService.Register(newUser, request.Password);
 

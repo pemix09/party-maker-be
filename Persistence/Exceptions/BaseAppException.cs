@@ -5,7 +5,7 @@
     {
         protected string message { get; set; }
         protected int code { get; set; }
-        public BaseAppException(string _msg) : base(_msg) {}
+        public BaseAppException() : base() {}
         public int GetExceptionCode()
         {
             return code;

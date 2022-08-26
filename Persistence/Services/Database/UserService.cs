@@ -17,11 +17,23 @@ namespace Persistence.Services.Database
             SignInManager<AppUser> _signInManager) : base(_context) 
         {
             userManager = _userManager;
+            signInManager = _signInManager;
         }
 
         public async Task Register(AppUser _newUser, string _password)
         {
-            await userManager.CreateAsync(_newUser);
+            AppUser user = await userManager.FindByEmailAsync(_newUser.Email);
+
+            if (user != null)
+            {
+                throw new UserAlreadyExistsException();
+            }
+            var result = await userManager.CreateAsync(_newUser);
+            if(!result.Succeeded)
+            {
+                throw new UserCannotBeCreatedException(result.Errors);
+            }
+            //methods below can only be envoked if previos one are good
             await userManager.AddPasswordAsync(_newUser, _password);
             await userManager.AddToRoleAsync(_newUser, "User");
         }
