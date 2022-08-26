@@ -21,9 +21,4 @@ public class AppUser : IdentityUser
     {
         return new AppUser(_email);
     }
-
-    public static implicit operator AppUser(IdentityResult v)
-    {
-        throw new NotImplementedException();
-    }
 }

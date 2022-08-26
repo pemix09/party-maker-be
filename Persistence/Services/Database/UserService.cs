@@ -1,6 +1,7 @@
 ﻿using Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Persistence.DbContext;
+using Persistence.Exceptions;
 
 namespace Persistence.Services.Database
 {
@@ -20,14 +21,20 @@ namespace Persistence.Services.Database
 
         public async Task Register(AppUser _newUser, string _password)
         {
-            AppUser user = await userManager.CreateAsync(_newUser);
-            await userManager.AddPasswordAsync(user, _password);
-            await userManager.AddToRoleAsync(user, "User");
+            await userManager.CreateAsync(_newUser);
+            await userManager.AddPasswordAsync(_newUser, _password);
+            await userManager.AddToRoleAsync(_newUser, "User");
         }
 
         public async Task Login(string _email, string _password)
         {
             AppUser user = await  userManager.FindByEmailAsync(_email);
+
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+
             await signInManager.PasswordSignInAsync(_email, _password, stayLoggedAfterClosingBrowser, lockAccountAfterSignInFailure);
         }
     }
