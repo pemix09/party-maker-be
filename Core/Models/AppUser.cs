@@ -16,6 +16,7 @@ public class AppUser : IdentityUser
     {
         base.Email = _email;
     }
+    private AppUser() { }
     public static AppUser Create(string _email)
     {
         return new AppUser(_email);

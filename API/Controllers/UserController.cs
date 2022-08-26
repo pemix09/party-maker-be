@@ -14,5 +14,10 @@ namespace API.Controllers
             await mediator.Send(command);
             return Ok();
         }
+        public async Task<IActionResult> Login(LoginUserCommand command)
+        {
+            await mediator.Send(command);
+            return Ok();
+        }
     }
 }
