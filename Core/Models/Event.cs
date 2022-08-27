@@ -22,7 +22,7 @@ public class Event
     public string Place { get; set; }
     
     [Required]
-    public int OrganizatorId { get; set; }
+    public string OrganizerId { get; set; }
     
     public List<int>? ParticipatorsIds { get; set; }
     
@@ -36,7 +36,7 @@ public class Event
     private Event(
         string description,
         string place,
-        int organizatorId,
+        string organizerId,
         int pass,
         string photo,
         int musicGenreId,
@@ -45,7 +45,7 @@ public class Event
         this.Description = description;
         this.Date = DateTime.Now;
         this.Place = place;
-        this.OrganizatorId = organizatorId;
+        this.OrganizerId = organizerId;
         this.PassId = pass;
         this.Photo = photo;
         this.MusicGenreId = musicGenreId;
@@ -55,13 +55,13 @@ public class Event
     public static Event Create(
         string description,
         string place,
-        int organizatorId,
+        string organizerId,
         int EntrancePassId,
         string photo,
         int musicGenreId,
         string type
     )
     {
-        return new Event(description, place, organizatorId, EntrancePassId, photo, musicGenreId, type);
+        return new Event(description, place, organizerId, EntrancePassId, photo, musicGenreId, type);
     }
 }

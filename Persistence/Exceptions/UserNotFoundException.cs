@@ -2,9 +2,9 @@
 {
     public class UserNotFoundException : BaseAppException
     {
-        public UserNotFoundException(string _msg = "User haven't been found", int _code = 404) : base()
+        public UserNotFoundException(string _email, int _code = 404) : base()
         {
-            message = _msg;
+            message = $"User with email: {_email} have not been found!";
             code = _code;
         }
     }

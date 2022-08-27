@@ -36,6 +36,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<PartyMakerDbContext>()
 .AddRoles<IdentityRole>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<BanService>();
