@@ -4,6 +4,7 @@ using Application.Message.Commands;
 using Core.Models;
 using Infrastructure.Middlewares;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,12 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<PartyMakerDbContext>()
 .AddRoles<IdentityRole>();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.SlidingExpiration = true;
+    });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<MessageService>();

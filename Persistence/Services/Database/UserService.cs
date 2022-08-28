@@ -1,4 +1,6 @@
 ﻿using Core.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Persistence.DbContext;
 using Persistence.Exceptions;
@@ -39,19 +41,27 @@ namespace Persistence.Services.Database
 
         public async Task Login(string _email, string _password)
         {
-            AppUser user = await  userManager.FindByEmailAsync(_email);
+            AppUser user = await userManager.FindByEmailAsync(_email);
 
             if (user == null)
             {
                 throw new UserNotFoundException(_email);
             }
 
-            if(!await signInManager.CanSignInAsync(user))
+            var result = await signInManager.PasswordSignInAsync(user.UserName, _password, stayLoggedAfterClosingBrowser, lockAccountAfterSignInFailure);
+
+            if(!result.Succeeded)
             {
-                throw new UserCannotBeSignInException(user.UserName);
+                throw new UserCannotBeSignInException(result, user);
             }
 
-            await signInManager.PasswordSignInAsync(_email, _password, stayLoggedAfterClosingBrowser, lockAccountAfterSignInFailure);
+            var claims = await userManager.GetClaimsAsync(user);
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await httpContextAccesor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
         }
 
         public async Task Logout()
@@ -59,6 +69,7 @@ namespace Persistence.Services.Database
             if(IsUserSignedIn())
             {
                 await signInManager.SignOutAsync();
+                await httpContextAccesor.HttpContext.SignOutAsync();
             }
         }
 
@@ -82,29 +93,29 @@ namespace Persistence.Services.Database
 
         private bool IsUserSignedIn()
         {
-            HttpContext httpContext = httpContextAccesor.HttpContext;
+            var user = httpContextAccesor.HttpContext?.User;
 
-            if(httpContext != null)
+            if(user == null)
             {
-                ClaimsPrincipal userClaims = httpContext.User;
-                return signInManager.IsSignedIn(userClaims);
+                return false;
             }
-            return false;
+          
+            return user.Identity.IsAuthenticated;
         }
 
         private async Task<AppUser> GetCurrentlySignedIn()
         {
-            HttpContext httpContext = httpContextAccesor.HttpContext;
-
-            if (httpContext != null)
+            if(!IsUserSignedIn())
             {
-                ClaimsPrincipal userClaims = httpContext.User;
-                AppUser currentUser = await userManager.GetUserAsync(userClaims);
+                throw new UserNotLoggedException();
 
-                return currentUser;
             }
 
-            return null;
+            var claims = httpContextAccesor.HttpContext.User;
+
+            AppUser currentUser = await userManager.GetUserAsync(claims);
+
+            return currentUser; 
         }
     }
 }

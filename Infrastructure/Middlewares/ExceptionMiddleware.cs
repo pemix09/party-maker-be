@@ -35,7 +35,6 @@ namespace Infrastructure.Middlewares
             }
         }
 
-        //method below should be other class that handles errors
         private Task HandleExceptionAsync(HttpContext _httpContext, string _message, int _code = (int)HttpStatusCode.InternalServerError)
         {
             _httpContext.Response.ContentType = "application/json";

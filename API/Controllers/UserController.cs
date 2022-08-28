@@ -27,14 +27,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Logout([FromBody]LogoutUserCommand command)
+        public async Task<IActionResult> Logout([FromQuery]LogoutUserCommand command)
         {
             await mediator.Send(command);
             return Ok();
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete([FromBody]DeleteUserCommand command)
+        public async Task<IActionResult> Delete([FromQuery]DeleteUserCommand command)
         {
             await mediator.Send(command);
             return Ok();
