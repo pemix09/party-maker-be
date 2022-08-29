@@ -1,10 +1,13 @@
 ﻿using Application.EntrancePass.Commands;
+using Application.EntrancePass.Queries;
 using Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Route("[controller]/[action]")]
+    [ApiController]
     public class EntrancePassController : BaseCRUDController
     {
         public EntrancePassController(IMediator _mediator) : base(_mediator){}
