@@ -38,9 +38,6 @@ $form.Topmost = $true
 $form.Add_Shown({$textBox.Select()})
 $result = $form.ShowDialog()
 
-#commit message:
-$CommitMessage = ""
-
 #if ok was clicked
 if ($result -eq [System.Windows.Forms.DialogResult]::OK)
 {

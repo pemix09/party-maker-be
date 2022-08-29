@@ -1,9 +1,14 @@
 using System.Configuration;
 using System.Reflection;
 using Application.Message.Commands;
+using AutoMapper;
+using Core.Mapper;
+using Core.Models;
 using Infrastructure.Middlewares;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,12 +26,40 @@ builder.Services.AddDbContext<PartyMakerDbContext>(options =>
     options.UseNpgsql(GetConnectionString());
 
 });
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+
+})
+.AddEntityFrameworkStores<PartyMakerDbContext>()
+.AddRoles<IdentityRole>();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.SlidingExpiration = true;
+    });
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<BanService>();
+builder.Services.AddScoped<UserService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
 builder.Services.AddSwaggerGen();
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new AllMappersProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
 
@@ -57,12 +90,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+CreateRoles(app).Wait();
 app.Run();
 
 string GetConnectionString()
@@ -84,4 +119,23 @@ string GetFrontEndAddress()
     string frontAddress = configuration.GetSection("FrontEndAddress").Key;
 
     return frontAddress;
+}
+
+async Task CreateRoles(IApplicationBuilder _app)
+{
+    using (var scope = _app.ApplicationServices.CreateScope())
+    {
+        var roleManager = (RoleManager<IdentityRole>)scope.ServiceProvider.GetService(typeof(RoleManager<IdentityRole>));
+
+        List<string> roleNames = configuration.GetSection("Roles").Get<List<string>>();
+
+        foreach (string role in roleNames)
+        {
+            bool roleExists = await roleManager.RoleExistsAsync(role);
+            if (!roleExists)
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+    }
 }

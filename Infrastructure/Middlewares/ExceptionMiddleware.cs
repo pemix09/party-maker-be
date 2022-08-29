@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Exceptions;
+using Persistence.Exceptions;
 using System.Net;
 
 namespace Infrastructure.Middlewares
@@ -22,18 +23,22 @@ namespace Infrastructure.Middlewares
             {
                 await next(_httpContext);
             }
-            catch(Exception ex)
+            catch(BaseAppException _appEx)
             {
+                await HandleExceptionAsync(_httpContext, _appEx.GetExceptionMessage(), _appEx.GetExceptionCode());
+            }
+            catch (Exception _ex)
+            {
+                Console.WriteLine(_ex.InnerException);
                 //logger.LogError($"Something went wrong");
-                await HandleExceptionAsync(_httpContext, ex.Message);
+                await HandleExceptionAsync(_httpContext, _ex.Message);
             }
         }
 
-        //method below should be other class that handles errors
-        private Task HandleExceptionAsync(HttpContext _httpContext, string _message)
+        private Task HandleExceptionAsync(HttpContext _httpContext, string _message, int _code = (int)HttpStatusCode.InternalServerError)
         {
             _httpContext.Response.ContentType = "application/json";
-            _httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            _httpContext.Response.StatusCode = _code;
 
             ErrorDetails errorDetails = new ErrorDetails(_httpContext.Response.StatusCode, _message);
 

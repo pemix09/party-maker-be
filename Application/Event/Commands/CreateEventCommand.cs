@@ -13,10 +13,11 @@ public class CreateEventCommand : IRequest<Unit>
     public string Name { get; init; }
     public string Description { get; init; }
     public string Place { get; init; }
-    public int OrganizerId { get; init; }
+    public string OrganizerId { get; init; }
     public int PassId { get; init; }
     public string Photo { get; init; }
     public int MusicGenreId { get; set; }
+    public string Type { get; set; }
 
     public class Handler : IRequestHandler<CreateEventCommand, Unit>
     {
@@ -35,7 +36,8 @@ public class CreateEventCommand : IRequest<Unit>
                 request.OrganizerId,
                 request.PassId,
                 request.Photo,
-                request.MusicGenreId);
+                request.MusicGenreId,
+                request.Type);
 
             await eventService.AddToDataBase(_event);
 
