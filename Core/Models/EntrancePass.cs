@@ -12,9 +12,9 @@ public class EntrancePass
     
     [Required]
     public string PassType { get; set; }
-    public float? Price { get; set; }
+    public decimal? Price { get; set; }
 
-    public void SetPrice(float price) => this.Price = price;
+    public void SetPrice(decimal price) => this.Price = price;
     public void SetType(string newType) => this.PassType = newType;
     public EntrancePass(){}
     private EntrancePass(string passType)

@@ -50,6 +50,7 @@ builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<BanService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<EntrancePassService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);

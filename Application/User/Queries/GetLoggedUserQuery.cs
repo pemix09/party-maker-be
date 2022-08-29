@@ -22,7 +22,7 @@ namespace Application.User.Queries
 
             public async Task<AppUserDto> Handle(GetLoggedUserQuery request, CancellationToken cancellationToken)
             {
-                AppUser user = await userService.GetCurrent();
+                AppUser user = await userService.GetCurrentlySignedIn();
 
                 if(user == null)
                 {

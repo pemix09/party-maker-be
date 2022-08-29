@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence.DbContext;
@@ -12,9 +13,10 @@ using Persistence.DbContext;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(PartyMakerDbContext))]
-    partial class PartyMakerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220829155213_Pass-Decimal-Price")]
+    partial class PassDecimalPrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
