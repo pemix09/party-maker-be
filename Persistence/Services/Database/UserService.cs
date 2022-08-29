@@ -86,9 +86,24 @@ namespace Persistence.Services.Database
             }
         }
 
-        public async Task<AppUser> GetCurrent()
+        public async Task<string> GetCurrentUserId()
         {
-            return await GetCurrentlySignedIn();
+            AppUser user = await GetCurrentlySignedIn();
+
+            return user.Id;
+        }
+        public async Task<AppUser> GetCurrentlySignedIn()
+        {
+            if (!IsUserSignedIn())
+            {
+                throw new UserNotLoggedException();
+            }
+
+            var claims = httpContextAccesor.HttpContext.User;
+
+            AppUser currentUser = await userManager.GetUserAsync(claims);
+
+            return currentUser;
         }
 
         private bool IsUserSignedIn()
@@ -101,21 +116,6 @@ namespace Persistence.Services.Database
             }
           
             return user.Identity.IsAuthenticated;
-        }
-
-        private async Task<AppUser> GetCurrentlySignedIn()
-        {
-            if(!IsUserSignedIn())
-            {
-                throw new UserNotLoggedException();
-
-            }
-
-            var claims = httpContextAccesor.HttpContext.User;
-
-            AppUser currentUser = await userManager.GetUserAsync(claims);
-
-            return currentUser; 
         }
     }
 }
