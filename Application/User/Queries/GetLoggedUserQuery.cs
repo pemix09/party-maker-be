@@ -1,4 +1,5 @@
-﻿using Core.Dto;
+﻿using AutoMapper;
+using Core.Dto;
 using Core.Models;
 using MediatR;
 using Persistence.Exceptions;
@@ -11,9 +12,12 @@ namespace Application.User.Queries
         public class Handler : IRequestHandler<GetLoggedUserQuery, AppUserDto>
         {
             UserService userService { get; init; }
-            public Handler(UserService _userService)
+            IMapper mapper { get; init; }
+
+            public Handler(UserService _userService, IMapper _mapper)
             {
                 userService = _userService;
+                mapper = _mapper;
             }
 
             public async Task<AppUserDto> Handle(GetLoggedUserQuery request, CancellationToken cancellationToken)
@@ -24,7 +28,8 @@ namespace Application.User.Queries
                 {
                     throw new UserNotLoggedException();
                 }
-                AppUserDto userDto = new AppUserDto(user.Id,user.UserName, user.Email, user.Photo);
+                //using Data transfer object, to not return the whole user
+                AppUserDto userDto = mapper.Map<AppUserDto>(user);
 
                 return userDto;
             }

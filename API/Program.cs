@@ -1,6 +1,8 @@
 using System.Configuration;
 using System.Reflection;
 using Application.Message.Commands;
+using AutoMapper;
+using Core.Mapper;
 using Core.Models;
 using Infrastructure.Middlewares;
 using MediatR;
@@ -49,8 +51,15 @@ builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<BanService>();
 builder.Services.AddScoped<UserService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
 builder.Services.AddSwaggerGen();
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new AllMappersProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
 
