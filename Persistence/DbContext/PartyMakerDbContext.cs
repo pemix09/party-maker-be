@@ -5,6 +5,7 @@ namespace Persistence.DbContext
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using Persistence.ModelConfiguration;
 
     public class PartyMakerDbContext : IdentityDbContext<AppUser,IdentityRole,string>
     {
@@ -15,6 +16,7 @@ namespace Persistence.DbContext
         public DbSet<MusicGenre> MusicGenres { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<Log> Logs { get; set; }
 
         public PartyMakerDbContext(DbContextOptions<PartyMakerDbContext> options) : base(options)
         {
@@ -25,12 +27,8 @@ namespace Persistence.DbContext
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PartyMakerDbContext).Assembly);
+            modelBuilder.ApplyConfiguration(new LogConfiguration());
         }
         
-        //dotnet ef migrations add --startup-project .\Lollipop.API\Lollipop.API.csproj --project .\Lollipop.Persistence\Lollipop.Persistence.csproj <nazwa migracji>
-        //dotnet ef migrations update --startup-project .\Lollipop.API\Lollipop.API.csproj --project .\Lollipop.Persistence\Lollipop.Persistence.csproj
-        //dotnet ef database update --startup-project .\Lollipop.API\Lollipop.API.csproj --project .\Lollipop.Persistence\Lollipop.Persistence.csproj
-        //Update-Database
-
     }
 }
