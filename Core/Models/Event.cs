@@ -22,46 +22,46 @@ public class Event
     public string Place { get; set; }
     
     [Required]
-    public AppUser OrganizerId { get; set; }
+    public AppUser Organizer { get; set; }
     
-    public List<AppUser>? ParticipatorsIds { get; set; }
+    public List<AppUser> Participants { get; set; } = new List<AppUser>();
     
     [Required]
     public int PassId { get; set; }
     public string Photo { get; set; }
-    public int MusicGenreId { get; set; }
+    public MusicGenre MusicGenre { get; set; }
     public string Type { get; set; }
 
     public Event(){}
     private Event(
         string description,
         string place,
-        AppUser organizerId,
+        AppUser organizer,
         int pass,
         string photo,
-        int musicGenreId,
+        MusicGenre musicGenreId,
         string type)
     {
         this.Description = description;
         this.Date = DateTime.Now;
         this.Place = place;
-        this.OrganizerId = organizerId;
+        this.Organizer = organizer;
         this.PassId = pass;
         this.Photo = photo;
-        this.MusicGenreId = musicGenreId;
+        this.MusicGenre = musicGenreId;
         Type = type;
     }
 
     public static Event Create(
         string description,
         string place,
-        AppUser organizerId,
+        AppUser organizer,
         int EntrancePassId,
         string photo,
-        int musicGenreId,
+        MusicGenre musicGenre,
         string type
     )
     {
-        return new Event(description, place, organizerId, EntrancePassId, photo, musicGenreId, type);
+        return new Event(description, place, organizer, EntrancePassId, photo, musicGenre, type);
     }
 }

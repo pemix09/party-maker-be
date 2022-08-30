@@ -10,8 +10,14 @@ public class AppUser : IdentityUser
     public float Rating { get; set; }
     public bool Premium { get; set; }
     public Ban? Ban { get; set; }
-    public List<Event>? Followed { get; set; }
+    public List<Event>? Followed { get; set; } = new List<Event>();
+    public List<Event> OrganizedEvents { get; set; } = new List<Event>();
+    public List<Event> TakesPart { get; set; } = new List<Event>();
 
+    public void AddEvent(Event _event)
+    {
+        OrganizedEvents.Add(_event);
+    }
     private AppUser(string _email, string _userName)
     {
         base.Email = _email;
