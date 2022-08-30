@@ -1,12 +1,10 @@
-using Core.Models;
-
 namespace Persistence.DbContext
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Persistence.ModelConfiguration;
-
+    using Core.Models;
     public class PartyMakerDbContext : IdentityDbContext<AppUser,IdentityRole,string>
     {
         public DbSet<Ban> Bans { get; set; }
@@ -28,6 +26,7 @@ namespace Persistence.DbContext
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PartyMakerDbContext).Assembly);
             modelBuilder.ApplyConfiguration(new LogConfiguration());
+            modelBuilder.ApplyConfiguration(new BanConfiguration());
         }
         
     }

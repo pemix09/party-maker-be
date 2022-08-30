@@ -22,9 +22,9 @@ public class Event
     public string Place { get; set; }
     
     [Required]
-    public string OrganizerId { get; set; }
+    public AppUser OrganizerId { get; set; }
     
-    public List<int>? ParticipatorsIds { get; set; }
+    public List<AppUser>? ParticipatorsIds { get; set; }
     
     [Required]
     public int PassId { get; set; }
@@ -36,7 +36,7 @@ public class Event
     private Event(
         string description,
         string place,
-        string organizerId,
+        AppUser organizerId,
         int pass,
         string photo,
         int musicGenreId,
@@ -55,7 +55,7 @@ public class Event
     public static Event Create(
         string description,
         string place,
-        string organizerId,
+        AppUser organizerId,
         int EntrancePassId,
         string photo,
         int musicGenreId,
