@@ -26,8 +26,7 @@ namespace Persistence.ModelConfiguration
                 .IsRequired()
                 .HasMaxLength(500);
 
-            builder.Property(x => x.ResponsibleAdmin)
-                .IsRequired();
+            builder.HasOne(x => x.ResponsibleAdmin);
 
             builder.Property(x => x.Start)
                 .IsRequired()

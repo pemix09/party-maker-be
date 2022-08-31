@@ -16,12 +16,11 @@ namespace Persistence.ModelConfiguration
             //from Organizer as well
             builder.HasOne(e => e.Organizer)
                 .WithMany(b => b.OrganizedEvents)
-                .HasForeignKey("OrganizerId")// entity framework will automatically replace AppUser Organizer for OrganizerId :D(take a look at database)
+                .HasForeignKey()// entity framework will automatically replace AppUser Organizer for OrganizerId :D(take a look at database)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Property(x => x.MusicGenre)
-                .IsRequired(false);
+            builder.HasOne(x => x.MusicGenre);
 
             builder.Property(x => x.Description)
                 .IsRequired();
@@ -40,7 +39,8 @@ namespace Persistence.ModelConfiguration
             //however entity framework will create this table automatically, beacuse of this relation!
             // !but how to create on delete action?
             builder.HasMany(x => x.Participants)
-                .WithMany(b => b.TakesPart);
+                .WithMany(b => b.TakesPart)
+                .UsingEntity("EventParticipant");
 
                 
         }

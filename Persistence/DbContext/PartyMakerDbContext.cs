@@ -28,6 +28,7 @@ namespace Persistence.DbContext
             modelBuilder.ApplyConfiguration(new LogConfiguration());
             modelBuilder.ApplyConfiguration(new BanConfiguration());
             modelBuilder.ApplyConfiguration(new EventConfiguration());
+            modelBuilder.ApplyConfiguration(new AppUserConfiguration());
         }
         
     }
