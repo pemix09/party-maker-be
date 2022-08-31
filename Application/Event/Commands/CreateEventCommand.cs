@@ -13,7 +13,6 @@ public class CreateEventCommand : IRequest<Unit>
     public string Name { get; init; }
     public string Description { get; init; }
     public string Place { get; init; }
-    public string OrganizerId { get; init; }
     public int PassId { get; init; }
     public string Photo { get; init; }
     public int MusicGenreId { get; set; }
@@ -22,21 +21,29 @@ public class CreateEventCommand : IRequest<Unit>
     public class Handler : IRequestHandler<CreateEventCommand, Unit>
     {
         private readonly EventService eventService;
-        public Handler(EventService _eventService)
+        private readonly UserService userService;
+        public Handler(EventService _eventService, UserService _userService)
         {
             eventService = _eventService;
+            userService = _userService;
         }
         public async Task<Unit> Handle(CreateEventCommand request, CancellationToken cancellationToken)
         {
             await new CreateEventValidator().ValidateAndThrowAsync(request, cancellationToken);
+
+            AppUser organizer = await userService.GetCurrentlySignedIn();
+
+            //TODO - music genre have to be retrived from db
+            MusicGenre musicGenre = new MusicGenre();
             
+            //TODO - MusicGenre have to be provided as an object
             Event _event = Event.Create(
                 request.Description,
                 request.Place,
-                request.OrganizerId,
+                organizer,
                 request.PassId,
                 request.Photo,
-                request.MusicGenreId,
+                musicGenre,
                 request.Type);
 
             await eventService.AddToDataBase(_event);

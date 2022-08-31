@@ -18,15 +18,15 @@ public class EventRepository : Repository<Event>, IEventRepository
         return PartyMakerDbContext.Events.Take(count);
     }
 
-    public IEnumerable<Event> GetOrganizerEvents(string organizerId)
+    public IEnumerable<Event> GetOrganizerEvents(AppUser _organizer)
     {
         return PartyMakerDbContext.Events
-            .Where(e => e.OrganizerId == organizerId);
+            .Where(e => e.Organizer == _organizer);
     }
 
-    public Task RemoveAllForUser(string _userId)
+    public Task RemoveAllForUser(AppUser _user)
     {
-        IEnumerable<Event> eventsToDelete = PartyMakerDbContext.Events.Where(x => x.OrganizerId == _userId);
+        IEnumerable<Event> eventsToDelete = PartyMakerDbContext.Events.Where(x => x.Organizer == _user);
         
         PartyMakerDbContext.Events.RemoveRange(eventsToDelete);
 

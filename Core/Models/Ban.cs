@@ -20,8 +20,8 @@ public class Ban
         BannedUser = _bannedUser;
         ResponsibleAdmin = _responsibleAdmin;
     }
-    public static Ban Create(string _reason, DateTime _end, AppUser _bannedUserId, AppUser _responsibleAdmin)
+    public static Ban Create(string _reason, DateTime _end, AppUser _bannedUser, AppUser _responsibleAdmin)
     {
-        return new Ban(_reason, _end, _bannedUserId, _responsibleAdmin);
+        return new Ban(_reason, _end, _bannedUser, _responsibleAdmin);
     }
 }

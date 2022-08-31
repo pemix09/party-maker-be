@@ -79,18 +79,16 @@ namespace Persistence.Services.Database
 
             if(currentUser != null)
             {
-                string userId = currentUser.Id;
-                
                 await userManager.DeleteAsync(currentUser);
-                await database.Events.RemoveAllForUser(userId);
+                await database.Events.RemoveAllForUser(currentUser);
             }
         }
 
-        public async Task<string> GetCurrentUserId()
+        public async Task<AppUser> GetUserById(string _userId)
         {
-            AppUser user = await GetCurrentlySignedIn();
+            AppUser user = await userManager.FindByIdAsync(_userId);
 
-            return user.Id;
+            return user;
         }
         public async Task<AppUser> GetCurrentlySignedIn()
         {
@@ -106,6 +104,9 @@ namespace Persistence.Services.Database
             return currentUser;
         }
 
+        // ! we can throw comments only here, which would be better approach than checking null references
+        // ! With functions that use some user
+        // TODO - have to change it a little bit
         private bool IsUserSignedIn()
         {
             var user = httpContextAccesor.HttpContext?.User;

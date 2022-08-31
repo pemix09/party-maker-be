@@ -10,21 +10,26 @@ namespace Application.Ban.Commands
     {
         public string Reason { get; init; }
         public DateTime End { get; init; }
-        public string BannedUser { get; init; }
+        public string BannedUserId { get; init; }
 
         public class Handler : IRequestHandler<CreateBanCommand, Unit>
         {
             private readonly BanService banService;
-            public Handler(BanService _banService)
+            private readonly UserService userService;
+            public Handler(BanService _banService, UserService _userService)
             {
                 banService = _banService;
+                userService = _userService;
             }
             public async Task<Unit> Handle(CreateBanCommand _request, CancellationToken _cancellationToken)
             {
+                //TODO - we have to check if current user can do this operation(if he's admin)
                 await new CreateBanValidator().ValidateAndThrowAsync(_request, _cancellationToken);
 
-                //TODO - when user service is ready
-                Ban ban = Ban.Create(_request.Reason, _request.End, _request.BannedUser, _request.BannedUser);
+                AppUser bannedUser = await userService.GetUserById(_request.BannedUserId);
+                AppUser resposnibleAdmin = await userService.GetCurrentlySignedIn();
+
+                Ban ban = Ban.Create(_request.Reason, _request.End, bannedUser, resposnibleAdmin);
                 await banService.AddToDataBase(ban);
 
                 return Unit.Value;

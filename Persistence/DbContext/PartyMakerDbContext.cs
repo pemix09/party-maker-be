@@ -27,6 +27,7 @@ namespace Persistence.DbContext
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PartyMakerDbContext).Assembly);
             modelBuilder.ApplyConfiguration(new LogConfiguration());
             modelBuilder.ApplyConfiguration(new BanConfiguration());
+            modelBuilder.ApplyConfiguration(new EventConfiguration());
         }
         
     }
