@@ -7,6 +7,7 @@ using Core.Models;
 using Infrastructure.Middlewares;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ using Persistence.DbContext;
 using Persistence.Services.Database;
 using Persistence.UnitOfWork;
 using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -39,12 +42,19 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<PartyMakerDbContext>()
 .AddRoles<IdentityRole>();
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => 
     {
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-        options.SlidingExpiration = true;
+        options.TokenValidationParameters = new TokenValidationParameters{
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration["JWT:Secret"])),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
     });
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<MessageService>();
