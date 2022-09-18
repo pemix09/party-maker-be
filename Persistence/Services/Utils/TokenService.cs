@@ -21,8 +21,15 @@ namespace Persistence.Services.Utils
         //not sure if I'm going to use it, and this method works, but return type is wrongs
         public async Task<string> CreateToken(AppUser _user)
         {
+            IList<string> roles = await userManager.GetRolesAsync(_user);
+            string mainRole = roles[0];
+
             //get user claims
-            ICollection<Claim> claims = await userManager.GetClaimsAsync(_user);
+            ICollection<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, _user.UserName),
+                new Claim(ClaimTypes.Role, mainRole)
+            };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
 
