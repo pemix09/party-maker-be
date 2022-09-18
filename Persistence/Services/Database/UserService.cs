@@ -57,10 +57,10 @@ namespace Persistence.Services.Database
 
         public async Task Logout()
         {
+            //TODO - we're not using cookies for authentication, but jwt tokens!
             if (IsUserSignedIn())
             {
                 await signInManager.SignOutAsync();
-                await httpContextAccesor.HttpContext.SignOutAsync();
             }
         }
 
@@ -90,6 +90,7 @@ namespace Persistence.Services.Database
                 throw new UserNotLoggedException();
             }
 
+            //TODO - we're not using cookies for authentication, but jwt tokens!
             var claims = httpContextAccesor.HttpContext.User;
 
             AppUser currentUser = await userManager.GetUserAsync(claims);
@@ -99,6 +100,7 @@ namespace Persistence.Services.Database
 
         private bool IsUserSignedIn()
         {
+            //TODO - we're not using cookies for authentication, but jwt tokens!
             var user = httpContextAccesor.HttpContext?.User;
 
             if (user == null)
