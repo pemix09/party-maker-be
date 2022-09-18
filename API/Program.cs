@@ -19,6 +19,9 @@ using Persistence.UnitOfWork;
 using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using Persistence.Services.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -61,10 +64,21 @@ builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<BanService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<EntrancePassService>();
+builder.Services.AddScoped<TokenService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => 
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme{
+        Description = "Authorization header, schema: (\"bearer {token}\")",
+        In = ParameterLocation.Header, 
+        Name = "Authorization token",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new AllMappersProfile());

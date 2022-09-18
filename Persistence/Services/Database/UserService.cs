@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Persistence.DbContext;
 using Persistence.Exceptions;
+using Persistence.Services.Utils;
 using System.Security.Claims;
 
 namespace Persistence.Services.Database
@@ -13,24 +14,27 @@ namespace Persistence.Services.Database
         private UserManager<AppUser> userManager { get; init; }
         private SignInManager<AppUser> signInManager { get; init; }
         private IHttpContextAccessor httpContextAccesor { get; init; }
+        private TokenService tokenService { get; init; }
         private bool stayLoggedAfterClosingBrowser = true;
         private bool lockAccountAfterSignInFailure = false;
         public UserService(
-            PartyMakerDbContext _context, 
+            PartyMakerDbContext _context,
             UserManager<AppUser> _userManager,
             SignInManager<AppUser> _signInManager,
-            IHttpContextAccessor _httpContextAccesor) : base(_context) 
+            IHttpContextAccessor _httpContextAccesor,
+            TokenService _tokenService) : base(_context)
         {
             userManager = _userManager;
             signInManager = _signInManager;
             httpContextAccesor = _httpContextAccesor;
+            tokenService = _tokenService;
         }
 
         public async Task Register(AppUser _newUser, string _password)
         {
             var result = await userManager.CreateAsync(_newUser);
 
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 throw new UserCannotBeCreatedException(result.Errors);
             }
@@ -39,7 +43,7 @@ namespace Persistence.Services.Database
             await userManager.AddToRoleAsync(_newUser, "User");
         }
 
-        public async Task Login(string _email, string _password)
+        public async Task<string> Login(string _email, string _password)
         {
             AppUser user = await userManager.FindByEmailAsync(_email);
 
@@ -48,25 +52,12 @@ namespace Persistence.Services.Database
                 throw new UserNotFoundException(_email);
             }
 
-            var result = await signInManager.PasswordSignInAsync(user.UserName, _password, stayLoggedAfterClosingBrowser, lockAccountAfterSignInFailure);
-
-            if(!result.Succeeded)
-            {
-                throw new UserCannotBeSignInException(result, user);
-            }
-
-            var claims = await userManager.GetClaimsAsync(user);
-
-            var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            await httpContextAccesor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
+            return await tokenService.CreateToken(user);
         }
 
         public async Task Logout()
         {
-            if(IsUserSignedIn())
+            if (IsUserSignedIn())
             {
                 await signInManager.SignOutAsync();
                 await httpContextAccesor.HttpContext.SignOutAsync();
@@ -77,10 +68,10 @@ namespace Persistence.Services.Database
         {
             AppUser currentUser = await GetCurrentlySignedIn();
 
-            if(currentUser != null)
+            if (currentUser != null)
             {
                 string userId = currentUser.Id;
-                
+
                 await userManager.DeleteAsync(currentUser);
                 await database.Events.RemoveAllForUser(userId);
             }
@@ -110,11 +101,11 @@ namespace Persistence.Services.Database
         {
             var user = httpContextAccesor.HttpContext?.User;
 
-            if(user == null)
+            if (user == null)
             {
                 return false;
             }
-          
+
             return user.Identity.IsAuthenticated;
         }
     }

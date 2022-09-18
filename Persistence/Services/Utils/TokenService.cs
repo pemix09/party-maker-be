@@ -19,23 +19,23 @@ namespace Persistence.Services.Utils
         }
 
         //not sure if I'm going to use it, and this method works, but return type is wrongs
-        // public async string CreateToken(AppUser _user)
-        // {
-        //     //get user claims
-        //     ICollection<Claim> claims = await userManager.GetClaimsAsync(_user);
+        public async Task<string> CreateToken(AppUser _user)
+        {
+            //get user claims
+            ICollection<Claim> claims = await userManager.GetClaimsAsync(_user);
 
-        //     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
 
-        //     var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
-        //     var token = new JwtSecurityToken(
-        //         claims: claims,
-        //         expires: DateTime.Now.AddDays(5),
-        //         signingCredentials: credentials
-        //     );
-        //     var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(5),
+                signingCredentials: credentials
+            );
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-        //     return Task.FromResult(jwt);
-        // }
+            return jwt;
+        }
     }
 }

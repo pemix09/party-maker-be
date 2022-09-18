@@ -21,10 +21,10 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody]LoginUserCommand command)
+        public async Task<ActionResult<string>> Login([FromBody]LoginUserCommand command)
         {
-            await mediator.Send(command);
-            return Ok();
+            string token = await mediator.Send(command);
+            return Ok(token);
         }
 
         [HttpGet]
