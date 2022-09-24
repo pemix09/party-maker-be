@@ -34,7 +34,7 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Delete([FromQuery]DeleteUserCommand command)
         {
             await mediator.Send(command);
@@ -42,7 +42,7 @@ namespace API.Controllers
         }
 
         //Authorize tag is for chechking if user is signed In
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AppUserDto>> GetLogged([FromQuery]GetLoggedUserQuery query)
         {
             AppUserDto user = await mediator.Send(query);

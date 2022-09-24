@@ -23,6 +23,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Persistence.Services.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Persistence.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -55,6 +56,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .GetBytes(builder.Configuration["JWT:Secret"])),
             ValidateIssuer = false,
             ValidateAudience = false
+        };
+        JwtOptions.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = async context =>
+            {
+                var ex = new UserNotAuthenticatedException();
+                throw ex;
+            },
+            OnChallenge = async context =>
+            {
+                var ex = new UserNotAuthenticatedException(context.Error);
+                throw ex;
+            },
+            OnForbidden = async context =>
+            {
+                var ex = new UserNotAuthorizedException();
+                throw ex;
+            }
         };
     });
 
