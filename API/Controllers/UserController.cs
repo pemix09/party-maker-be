@@ -2,6 +2,7 @@
 using Application.User.Queries;
 using Core.Dto;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -20,10 +21,10 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody]LoginUserCommand command)
+        public async Task<ActionResult<string>> Login([FromBody]LoginUserCommand command)
         {
-            await mediator.Send(command);
-            return Ok();
+            string token = await mediator.Send(command);
+            return Ok(token);
         }
 
         [HttpGet]
@@ -33,14 +34,15 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Delete([FromQuery]DeleteUserCommand command)
         {
             await mediator.Send(command);
             return Ok();
         }
 
-        [HttpGet]
+        //Authorize tag is for chechking if user is signed In
+        [HttpGet, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AppUserDto>> GetLogged([FromQuery]GetLoggedUserQuery query)
         {
             AppUserDto user = await mediator.Send(query);

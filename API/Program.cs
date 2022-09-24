@@ -7,6 +7,7 @@ using Core.Models;
 using Infrastructure.Middlewares;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,13 @@ using Persistence.DbContext;
 using Persistence.Services.Database;
 using Persistence.UnitOfWork;
 using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using Persistence.Services.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Persistence.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -35,26 +43,64 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
-
 })
 .AddEntityFrameworkStores<PartyMakerDbContext>()
-.AddRoles<IdentityRole>();
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+.AddRoles<IdentityRole>()
+.AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(JwtOptions => 
     {
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-        options.SlidingExpiration = true;
+        JwtOptions.IncludeErrorDetails = true;
+        JwtOptions.TokenValidationParameters = new TokenValidationParameters{
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration["JWT:Secret"])),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            RequireExpirationTime = true
+        };
+        JwtOptions.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = async context =>
+            {
+                var ex = new UserNotAuthenticatedException();
+                throw ex;
+            },
+            OnChallenge = async context =>
+            {
+                var ex = new UserNotAuthenticatedException(context.Error);
+                throw ex;
+            },
+            OnForbidden = async context =>
+            {
+                var ex = new UserNotAuthorizedException();
+                throw ex;
+            }
+        };
     });
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<BanService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<EntrancePassService>();
+builder.Services.AddScoped<TokenService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => 
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme{
+        Description = "Authorization header, schema: (\"Bearer {token}\")",
+        In = ParameterLocation.Header, 
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new AllMappersProfile());
