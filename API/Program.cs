@@ -45,17 +45,20 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireLowercase = false;
 })
 .AddEntityFrameworkStores<PartyMakerDbContext>()
-.AddRoles<IdentityRole>();
+.AddRoles<IdentityRole>()
+.AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(JwtOptions => 
     {
+        JwtOptions.IncludeErrorDetails = true;
         JwtOptions.TokenValidationParameters = new TokenValidationParameters{
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                 .GetBytes(builder.Configuration["JWT:Secret"])),
             ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateAudience = false,
+            RequireExpirationTime = true
         };
         JwtOptions.Events = new JwtBearerEvents
         {
@@ -90,9 +93,9 @@ builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
 builder.Services.AddSwaggerGen(options => 
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme{
-        Description = "Authorization header, schema: (\"bearer {token}\")",
+        Description = "Authorization header, schema: (\"Bearer {token}\")",
         In = ParameterLocation.Header, 
-        Name = "AuthToken",
+        Name = "Authorization",
         Type = SecuritySchemeType.ApiKey
     });
 
