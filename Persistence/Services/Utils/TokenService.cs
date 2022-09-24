@@ -21,16 +21,27 @@ namespace Persistence.Services.Utils
         //not sure if I'm going to use it, and this method works, but return type is wrongs
         public async Task<string> CreateToken(AppUser _user)
         {
+            //list for storing user claims
+            ICollection<Claim> claims = new List<Claim>();
+
+            //Add user's roles claims
             IList<string> roles = await userManager.GetRolesAsync(_user);
-            string mainRole = roles[0];
-
-            //get user claims
-            ICollection<Claim> claims = new List<Claim>
+            foreach (string role in roles)
             {
-                new Claim(ClaimTypes.Name, _user.UserName),
-                new Claim(ClaimTypes.Role, mainRole)
-            };
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
+            //user specific claims
+            claims.Add(new Claim(ClaimTypes.Name, _user.UserName));
+            claims.Add(new Claim(ClaimTypes.Email, _user.Email));
+
+            //Nullable claims
+            if(_user.PhoneNumber != null)
+            {
+                claims.Add(new Claim(ClaimTypes.MobilePhone, _user.PhoneNumber));
+            }
+
+            //key for encryption, ensures that token is valid
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
 
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);

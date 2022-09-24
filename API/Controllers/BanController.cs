@@ -8,6 +8,8 @@ namespace API.Controllers
     using Core.Models;
     using Microsoft.AspNetCore.Authorization;
 
+    //below attribute is for jwt authorization
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("[controller]/[action]")]
     [ApiController]
     public class BanController : BaseCRUDController
