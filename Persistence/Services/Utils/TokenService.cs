@@ -68,6 +68,7 @@ namespace Persistence.Services.Utils
                 Created = DateTime.Now
             };
 
+            SetRefreshToken(token);
             return token;
         }
 
