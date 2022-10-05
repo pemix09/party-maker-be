@@ -4,13 +4,15 @@ namespace Persistence.Exceptions
 {
     public class UserCannotBeCreatedException : BaseAppException
     {
-        public UserCannotBeCreatedException(IEnumerable<IdentityError> _errors, int _code = 500) : base()
+        private const int exCode = StatusCodes.Status400BadRequest;
+        public UserCannotBeCreatedException(IEnumerable<IdentityError> _errors) : base()
         {
             foreach (var error in _errors)
             {
                 message += error.Description;
             }
-            code = _code;
+
+            base.code = exCode;
         }
     }
 }
