@@ -1,10 +1,15 @@
-﻿using Application.User.Commands;
+﻿using System.Security.Claims;
+using Application.User.Commands;
 using Application.User.Queries;
 using Core.Dto;
+using Core.Models;
 using Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Persistence.Exceptions;
+using Persistence.Services.Utils;
 
 namespace API.Controllers
 {
@@ -12,7 +17,14 @@ namespace API.Controllers
     [ApiController]
     public class UserController : BaseCRUDController
     {
-        public UserController(IMediator _mediator) : base(_mediator) { }
+        private UserManager<AppUser> userManager;
+        private TokenService tokenService;
+
+        public UserController(IMediator _mediator, UserManager<AppUser> _userManager, TokenService _tokenService) : base(_mediator)
+        {
+            userManager = _userManager;
+            tokenService = _tokenService;
+        }
 
         [HttpPost]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
@@ -52,6 +64,27 @@ namespace API.Controllers
         {
             AppUserDto user = await mediator.Send(query);
             return Ok(user);
+        }
+
+        //TODO - to refactor to look better
+        [HttpPost]
+        public async Task<ActionResult<string>> RefreshToken()
+        {
+            var refreshToken = Request.Cookies["RefreshToken"];
+            string userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            var user = await userManager.FindByEmailAsync(userEmail);
+
+            if (!user.RefreshToken.Equals(refreshToken))
+            {
+                throw new InvalidRefreshTokenException();
+            }
+            else if (user.RefreshTokenExpires < DateTime.Now)
+            {
+                throw new TokenExpiredException();
+            }
+
+            string accessToken = await tokenService.CreateAccessToken(user);
+            return Ok(accessToken);
         }
     }
 }
