@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Exceptions;
 using Persistence.Exceptions;
 using System.Net;
+using FluentValidation;
 
 namespace Infrastructure.Middlewares
 {
@@ -23,9 +24,15 @@ namespace Infrastructure.Middlewares
             {
                 await next(_httpContext);
             }
-            catch(BaseAppException _appEx)
+            //catch exception created in this app(custom exceptions)
+            catch (BaseAppException _appEx)
             {
                 await HandleExceptionAsync(_httpContext, _appEx.GetExceptionMessage(), _appEx.GetExceptionCode());
+            }
+            //catch validation exceptions
+            catch (ValidationException _valEx)
+            {
+                await HandleExceptionAsync(_httpContext, _valEx.Message, StatusCodes.Status400BadRequest);
             }
             catch (Exception _ex)
             {

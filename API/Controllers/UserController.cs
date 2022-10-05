@@ -1,6 +1,7 @@
 ﻿using Application.User.Commands;
 using Application.User.Queries;
 using Core.Dto;
+using Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,8 @@ namespace API.Controllers
         public UserController(IMediator _mediator) : base(_mediator) { }
 
         [HttpPost]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Register([FromBody]RegisterUserCommand command)
         {
             await mediator.Send(command);
@@ -21,6 +24,8 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<string>> Login([FromBody]LoginUserCommand command)
         {
             string token = await mediator.Send(command);
