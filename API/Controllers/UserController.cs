@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Exceptions;
+using Persistence.Services.Database;
 using Persistence.Services.Utils;
 
 namespace API.Controllers
@@ -17,12 +18,12 @@ namespace API.Controllers
     [ApiController]
     public class UserController : BaseCRUDController
     {
-        private UserManager<AppUser> userManager;
         private TokenService tokenService;
+        private UserService userService;
 
-        public UserController(IMediator _mediator, UserManager<AppUser> _userManager, TokenService _tokenService) : base(_mediator)
+        public UserController(IMediator _mediator, UserManager<AppUser> _userManager, TokenService _tokenService, UserService _userService) : base(_mediator)
         {
-            userManager = _userManager;
+            userService = _userService;
             tokenService = _tokenService;
         }
 
@@ -67,14 +68,17 @@ namespace API.Controllers
         }
 
         //TODO - to refactor to look better
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<string>> RefreshToken()
         {
             var refreshToken = Request.Cookies["RefreshToken"];
-            string userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-            var user = await userManager.FindByEmailAsync(userEmail);
+            var user = await userService.GetCurrentlySignedIn();
 
-            if (!user.RefreshToken.Equals(refreshToken))
+            if (user.RefreshToken.Equals(string.Empty))
+            {
+                throw new UserNotAuthenticatedException();
+            }
+            else if (!user.RefreshToken.Equals(refreshToken))
             {
                 throw new InvalidRefreshTokenException();
             }

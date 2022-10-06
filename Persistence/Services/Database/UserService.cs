@@ -65,58 +65,32 @@ namespace Persistence.Services.Database
 
         public async Task Logout()
         {
-            //TODO - we're not using cookies for authentication, but jwt tokens!
-            if (IsUserSignedIn())
-            {
-                await signInManager.SignOutAsync();
-            }
+            AppUser user = await GetCurrentlySignedIn();
+            user.RefreshToken = String.Empty;
+            await userManager.UpdateAsync(user);
         }
 
         public async Task DeleteCurrent()
         {
-            AppUser currentUser = await GetCurrentlySignedIn();
-
-            if (currentUser != null)
-            {
-                string userId = currentUser.Id;
-
-                await userManager.DeleteAsync(currentUser);
-                await database.Events.RemoveAllForUser(userId);
-            }
-        }
-
-        public async Task<string> GetCurrentUserId()
-        {
             AppUser user = await GetCurrentlySignedIn();
+   
+            string userId = user.Id;
 
-            return user.Id;
+            await userManager.DeleteAsync(user);
+            await database.Events.RemoveAllForUser(userId);
         }
         public async Task<AppUser> GetCurrentlySignedIn()
         {
-            if (!IsUserSignedIn())
+            try
             {
-                throw new UserNotLoggedException();
+                var name = httpContextAccesor.HttpContext.User.Identity.Name;
+                AppUser currentUser = await userManager.FindByNameAsync(name);
+                return currentUser;
             }
-
-            //TODO - we're not using cookies for authentication, but jwt tokens!
-            var claims = httpContextAccesor.HttpContext.User;
-
-            AppUser currentUser = await userManager.GetUserAsync(claims);
-
-            return currentUser;
-        }
-
-        private bool IsUserSignedIn()
-        {
-            //TODO - we're not using cookies for authentication, but jwt tokens!
-            var user = httpContextAccesor.HttpContext?.User;
-
-            if (user == null)
+            catch
             {
-                return false;
+                throw new UserNotAuthenticatedException();
             }
-
-            return user.Identity.IsAuthenticated;
         }
     }
 }
