@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.UtilityClasses;
 using Microsoft.AspNetCore.Identity;
 
 namespace Core.Models;
@@ -11,7 +12,16 @@ public class AppUser : IdentityUser
     public bool Premium { get; set; }
     public int? BanId { get; set; }
     public List<Event>? Followed { get; set; }
+    public string RefreshToken { get; set; }
+    public DateTime RefreshTokenExpires { get; set; }
+    public DateTime RefreshTokenCreated { get; set; }
 
+    public void SetRefreshToken(RefreshToken _refreshToken)
+    {
+        RefreshToken = _refreshToken.Token;
+        RefreshTokenCreated = _refreshToken.Created;
+        RefreshTokenExpires = _refreshToken.Expires;
+    }
     private AppUser(string _email, string _userName)
     {
         base.Email = _email;

@@ -1,10 +1,16 @@
-﻿using Application.User.Commands;
+﻿using System.Security.Claims;
+using Application.User.Commands;
 using Application.User.Queries;
 using Core.Dto;
+using Core.Models;
 using Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Persistence.Exceptions;
+using Persistence.Services.Database;
+using Persistence.Services.Utils;
 
 namespace API.Controllers
 {
@@ -12,7 +18,14 @@ namespace API.Controllers
     [ApiController]
     public class UserController : BaseCRUDController
     {
-        public UserController(IMediator _mediator) : base(_mediator) { }
+        private TokenService tokenService;
+        private UserService userService;
+
+        public UserController(IMediator _mediator, UserManager<AppUser> _userManager, TokenService _tokenService, UserService _userService) : base(_mediator)
+        {
+            userService = _userService;
+            tokenService = _tokenService;
+        }
 
         [HttpPost]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status400BadRequest)]
@@ -52,6 +65,30 @@ namespace API.Controllers
         {
             AppUserDto user = await mediator.Send(query);
             return Ok(user);
+        }
+
+        //TODO - to refactor to look better
+        [HttpPost, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult<string>> RefreshToken()
+        {
+            var refreshToken = Request.Cookies["RefreshToken"];
+            var user = await userService.GetCurrentlySignedIn();
+
+            if (user.RefreshToken.Equals(string.Empty))
+            {
+                throw new UserNotAuthenticatedException();
+            }
+            else if (!user.RefreshToken.Equals(refreshToken))
+            {
+                throw new InvalidRefreshTokenException();
+            }
+            else if (user.RefreshTokenExpires < DateTime.Now)
+            {
+                throw new TokenExpiredException();
+            }
+
+            string accessToken = await tokenService.CreateAccessToken(user);
+            return Ok(accessToken);
         }
     }
 }

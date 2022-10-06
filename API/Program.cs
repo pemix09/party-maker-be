@@ -49,8 +49,12 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(JwtOptions => 
+    .AddJwtBearer(JwtOptions =>
     {
+        JwtOptions.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = "name"
+        };
         JwtOptions.IncludeErrorDetails = true;
         JwtOptions.TokenValidationParameters = new TokenValidationParameters{
             ValidateIssuerSigningKey = true,

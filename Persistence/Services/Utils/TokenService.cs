@@ -1,3 +1,5 @@
+using Core.UtilityClasses;
+
 namespace Persistence.Services.Utils
 {
     using Core.Models;
@@ -12,14 +14,15 @@ namespace Persistence.Services.Utils
     {
         private UserManager<AppUser> userManager;
         private IConfiguration configuration;
-        public TokenService(UserManager<AppUser> _userManager, IConfiguration _configuration)
+        private IHttpContextAccessor httpContextAccessor;
+        public TokenService(UserManager<AppUser> _userManager, IConfiguration _configuration, IHttpContextAccessor _httpContextAccesor)
         {
             userManager = _userManager;
             configuration = _configuration;
+            httpContextAccessor = _httpContextAccesor;
         }
 
-        //not sure if I'm going to use it, and this method works, but return type is wrongs
-        public async Task<string> CreateToken(AppUser _user)
+        public async Task<string> CreateAccessToken(AppUser _user)
         {
             //list for storing user claims
             ICollection<Claim> claims = new List<Claim>();
@@ -34,6 +37,7 @@ namespace Persistence.Services.Utils
             //user specific claims
             claims.Add(new Claim(ClaimTypes.Name, _user.UserName));
             claims.Add(new Claim(ClaimTypes.Email, _user.Email));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, _user.Id));
 
             //Nullable claims
             if(_user.PhoneNumber != null)
@@ -55,5 +59,32 @@ namespace Persistence.Services.Utils
 
             return jwt;
         }
+
+        public RefreshToken CreateRefreshToken()
+        {
+            RefreshToken token = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                Expires = DateTime.Now.AddDays(15),
+                Created = DateTime.Now
+            };
+
+            SetRefreshToken(token);
+            return token;
+        }
+
+        private void SetRefreshToken(RefreshToken _newRefreshToken)
+        {
+            var context = httpContextAccessor.HttpContext;
+            
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = _newRefreshToken.Expires
+            };
+            context.Response.Cookies.Append("RefreshToken", _newRefreshToken.Token, cookieOptions);
+        }
     }
+
+    
 }
