@@ -37,6 +37,7 @@ namespace Persistence.Services.Utils
             //user specific claims
             claims.Add(new Claim(ClaimTypes.Name, _user.UserName));
             claims.Add(new Claim(ClaimTypes.Email, _user.Email));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, _user.Id));
 
             //Nullable claims
             if(_user.PhoneNumber != null)
