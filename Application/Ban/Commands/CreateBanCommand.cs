@@ -15,16 +15,22 @@ namespace Application.Ban.Commands
         public class Handler : IRequestHandler<CreateBanCommand, Unit>
         {
             private readonly BanService banService;
-            public Handler(BanService _banService)
+            private readonly UserService userService;
+            public Handler(BanService _banService, UserService _userService)
             {
                 banService = _banService;
+                userService = _userService;
             }
             public async Task<Unit> Handle(CreateBanCommand _request, CancellationToken _cancellationToken)
             {
                 await new CreateBanValidator().ValidateAndThrowAsync(_request, _cancellationToken);
 
-                //TODO - when user service is ready
-                Ban ban = Ban.Create(_request.Reason, _request.End, _request.BannedUser, _request.BannedUser);
+                AppUser responsibleAdmin = await userService.GetCurrentlySignedIn();
+                
+                //check if user with given Id exists
+                AppUser bannedUser = await userService.GetUserById(_request.BannedUser);
+                
+                Ban ban = Ban.Create(_request.Reason, _request.End, bannedUser.Id, responsibleAdmin.Id);
                 await banService.AddToDataBase(ban);
 
                 return Unit.Value;

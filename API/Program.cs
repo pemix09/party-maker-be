@@ -73,7 +73,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
             OnChallenge = async context =>
             {
-                var ex = new UserNotAuthenticatedException(context.Error);
+                var ex = new UserNotLoggedException();
                 throw ex;
             },
             OnForbidden = async context =>

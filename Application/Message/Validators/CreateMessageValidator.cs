@@ -9,10 +9,7 @@ namespace Application.Message.Validators
         {
             RuleFor(x => x.Content)
                 .NotEmpty()
-                .WithMessage("Message content cannot be empy!");
-            RuleFor(x => x.SenderId)
-                .NotEmpty()
-                .WithMessage("Sender Id cannot be empty!");
+                .WithMessage("Message content cannot be empty!");
             RuleFor(x => x.ReceiverId)
                 .NotEmpty()
                 .WithMessage("Receiver Id cannot be empty!");

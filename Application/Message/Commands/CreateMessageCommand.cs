@@ -11,20 +11,22 @@
         public string Content { get; init; }
         public int EventId { get; init; }
         public string ReceiverId { get; init; }
-        public string SenderId { get; init; }
-
         public class Handler : IRequestHandler<CreateMessageCommand, Unit>
         {
             private readonly MessageService messageService;
-            public Handler(MessageService _messageService)
+            private readonly UserService userService;
+            public Handler(MessageService _messageService, UserService _userService)
             {
                 messageService = _messageService;
+                userService = _userService;
             }
             public async Task<Unit> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
             {
                 await new CreateMessageValidator().ValidateAndThrowAsync(request, cancellationToken);
 
-                Message message = Message.Create(request.SenderId, request.ReceiverId, request.EventId, request.Content);
+                AppUser sender = await  userService.GetCurrentlySignedIn();
+                
+                Message message = Message.Create(sender.Id, request.ReceiverId, request.EventId, request.Content);
                 await messageService.AddToDataBase(message);
 
                 return Unit.Value;
