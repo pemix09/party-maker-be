@@ -92,6 +92,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<EntrancePassService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<MailService>();
+builder.Services.AddScoped<AdminService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
@@ -150,6 +151,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 CreateRoles(app).Wait();
+AddSuperAdmins(app).Wait();
 app.Run();
 
 string GetConnectionString()
@@ -189,5 +191,14 @@ async Task CreateRoles(IApplicationBuilder _app)
                 await roleManager.CreateAsync(new IdentityRole(role));
             }
         }
+    }
+}
+
+async Task AddSuperAdmins(IApplicationBuilder _app)
+{
+    using (var scope = _app.ApplicationServices.CreateScope())
+    {
+        var AdminService = (AdminService)scope.ServiceProvider.GetService(typeof(AdminService));
+        await AdminService.AddSuperAdmins();
     }
 }
