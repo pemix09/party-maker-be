@@ -53,7 +53,7 @@ namespace Persistence.Services.Database
 
             if (user == null)
             {
-                throw new UserNotFoundException(_email);
+                throw new UserEmailNotFoundException(_email);
             }
 
             var refreshToken = tokenService.CreateRefreshToken();
@@ -90,6 +90,20 @@ namespace Persistence.Services.Database
             catch
             {
                 throw new UserNotAuthenticatedException();
+            }
+        }
+
+        public async Task<AppUser> GetUserById(string _Id)
+        {
+            AppUser user = await userManager.FindByIdAsync(_Id);
+
+            if (user == null)
+            {
+                throw new UserIdNotFoundException(_Id);
+            }
+            else
+            {
+                return user;
             }
         }
     }
