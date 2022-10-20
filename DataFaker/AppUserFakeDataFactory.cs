@@ -10,7 +10,7 @@ public class AppUserFakeDataFactory
 
     public AppUserFakeDataFactory()
     {
-        AppUserFaker = new Faker<AppUser>()
+        AppUserFaker = new Faker<AppUser>(locale: "pl")
             .RuleFor(user => user.Email, fake => fake.Person.Email)
             .RuleFor(user => user.UserName, fake => fake.Person.UserName)
             .RuleFor(user => user.PhoneNumber, fake => fake.Person.Phone)
