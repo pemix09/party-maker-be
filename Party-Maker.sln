@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFaker", "DataFaker\DataFaker.csproj", "{AC07695F-67DD-4221-9F23-BD2358D74819}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTests", "ApiTests\ApiTests.csproj", "{F65B2BEB-9347-4A34-A89D-8F11340AD8D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{AC07695F-67DD-4221-9F23-BD2358D74819}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC07695F-67DD-4221-9F23-BD2358D74819}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC07695F-67DD-4221-9F23-BD2358D74819}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F65B2BEB-9347-4A34-A89D-8F11340AD8D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F65B2BEB-9347-4A34-A89D-8F11340AD8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F65B2BEB-9347-4A34-A89D-8F11340AD8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F65B2BEB-9347-4A34-A89D-8F11340AD8D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

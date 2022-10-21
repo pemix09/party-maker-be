@@ -14,8 +14,8 @@ namespace Application.User.Commands
 
         public class Handler : IRequestHandler<RegisterUserCommand, Unit>
         {
-            private UserService userService;
-            public Handler(UserService _userService)
+            private IUserService userService;
+            public Handler(IUserService _userService)
             {
                 userService = _userService;
             }

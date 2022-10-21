@@ -88,7 +88,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<BanService>();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<EntrancePassService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<MailService>();
