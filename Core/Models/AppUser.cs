@@ -29,7 +29,7 @@ public class AppUser : IdentityUser
         Rating = 0;
         Premium = false;
     }
-    private AppUser() { }
+    public AppUser() { }
     public static AppUser Create(string _email, string _userName)
     {
         return new AppUser(_email, _userName);
