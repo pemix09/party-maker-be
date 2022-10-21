@@ -7,8 +7,8 @@ namespace Application.User.Commands
     {
         public class Handler : IRequestHandler<LogoutUserCommand, Unit>
         {
-            UserService userService { get; init; }
-            public Handler(UserService _userService)
+            IUserService userService { get; init; }
+            public Handler(IUserService _userService)
             {
                 userService = _userService;
             }

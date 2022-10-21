@@ -11,10 +11,10 @@ namespace Application.User.Queries
     {
         public class Handler : IRequestHandler<GetLoggedUserQuery, AppUserDto>
         {
-            UserService userService { get; init; }
+            IUserService userService { get; init; }
             IMapper mapper { get; init; }
 
-            public Handler(UserService _userService, IMapper _mapper)
+            public Handler(IUserService _userService, IMapper _mapper)
             {
                 userService = _userService;
                 mapper = _mapper;

@@ -15,8 +15,8 @@ namespace Application.Ban.Commands
         public class Handler : IRequestHandler<CreateBanCommand, Unit>
         {
             private readonly BanService banService;
-            private readonly UserService userService;
-            public Handler(BanService _banService, UserService _userService)
+            private readonly IUserService userService;
+            public Handler(BanService _banService, IUserService _userService)
             {
                 banService = _banService;
                 userService = _userService;

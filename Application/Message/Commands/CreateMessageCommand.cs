@@ -14,8 +14,8 @@
         public class Handler : IRequestHandler<CreateMessageCommand, Unit>
         {
             private readonly MessageService messageService;
-            private readonly UserService userService;
-            public Handler(MessageService _messageService, UserService _userService)
+            private readonly IUserService userService;
+            public Handler(MessageService _messageService, IUserService _userService)
             {
                 messageService = _messageService;
                 userService = _userService;
