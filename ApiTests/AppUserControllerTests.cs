@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using API.Controllers;
 using Application.User.Commands;
 using Core.Models;
 using DataFaker;
@@ -25,7 +26,6 @@ public class AppUserControllerTests
             .ReturnsAsync(Unit.Value) //<-- return Task to allow await to continue
             .Verifiable("Notification was not sent.");
         
-        Mock<IUserService> userService = new Mock<IUserService>();
         RegisterUserCommand command = FakeDataFactory.GenerateFakeRegisterRequest();
         
         //Act
@@ -33,6 +33,6 @@ public class AppUserControllerTests
 
         //Assert
         mediator.Verify(x => x.Send(It.IsAny<RegisterUserCommand>(), It.IsAny<CancellationToken>()));
-
     }
+    
 }
