@@ -1,4 +1,6 @@
-﻿namespace API.Controllers
+﻿using Infrastructure;
+
+namespace API.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using Core.Models;
@@ -19,6 +21,9 @@
         public async Task<ActionResult> Create([FromBody] CreateMessageCommand command)
         {
             await mediator.Send(command);
+            //TODO - we have to return newly added message, so then we can create notification from it,
+            //TODO - or we can return notification directly
+            mediator.Publish(new MessageSentNotification());
             return Ok();
         }
 

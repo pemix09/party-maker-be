@@ -2,15 +2,10 @@ using Core.Models;
 
 namespace Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using MediatR;
 
-public class MessageHub : Hub
+public class MessageHub : Hub<IMessageHub>
 {
-    public async IAsyncEnumerable<Message> MessageStreaming(CancellationToken _cancellationToken)
-    {
-        while (true)
-        {
-            yield return Message.Create("dsa", "dsa", 12, "cs");
-            await Task.Delay(1000, _cancellationToken);
-        }
-    }
+    public MessageHub(){}
+
 }
