@@ -20,8 +20,8 @@ public class MessageSentNotificationHandler : INotificationHandler<MessageSentNo
     {
         // read relevant data from notification
         string recipientUserId = notification.ToUserId;
-        string fromUsername = notification.FromUserName;
-        string subject = notification.MessageSubject;
+        string fromUsername = notification.FromUserId;
+        string content = notification.MessageContent;
 
         // We use the context to avoid magic strings
         // Our Id is also our authentication
@@ -29,6 +29,6 @@ public class MessageSentNotificationHandler : INotificationHandler<MessageSentNo
         await messageHubContext
             .Clients
             .User(recipientUserId)
-            .NewMessage(fromUsername, subject);
+            .NewMessage(fromUsername, content);
     }
 }

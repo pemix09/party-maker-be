@@ -20,6 +20,7 @@ using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationMan
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Hubs;
+using Infrastructure.NotificationsHandlers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Persistence.Services.Utils;
@@ -98,7 +99,7 @@ builder.Services.AddSignalR();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
+builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly, typeof(MessageSentNotificationHandler).Assembly);
 builder.Services.AddSwaggerGen(options => 
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme{

@@ -20,10 +20,9 @@ namespace API.Controllers
         [HttpPost, Authorize(Roles = "User")]
         public async Task<ActionResult> Create([FromBody] CreateMessageCommand command)
         {
-            await mediator.Send(command);
-            //TODO - we have to return newly added message, so then we can create notification from it,
-            //TODO - or we can return notification directly
-            mediator.Publish(new MessageSentNotification());
+            var message = await mediator.Send(command);
+            var notification = MessageSentNotification.CreateFromMessage(message);
+            await mediator.Publish(notification);
             return Ok();
         }
 

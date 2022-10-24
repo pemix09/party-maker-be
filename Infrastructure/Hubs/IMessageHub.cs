@@ -2,6 +2,6 @@ namespace Infrastructure.Hubs;
 
 public interface IMessageHub
 {
-    Task NewMessage(string fromUser, string subject);
+    Task NewMessage(string fromUser, string content);
 
 }
