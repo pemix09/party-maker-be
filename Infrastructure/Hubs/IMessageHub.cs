@@ -1,3 +1,5 @@
+using Core.Models;
+
 namespace Infrastructure.Hubs;
 
 public interface IMessageHub
