@@ -88,7 +88,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<EventService>();
-builder.Services.AddScoped<MessageService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<BanService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<EntrancePassService>();

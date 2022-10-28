@@ -2,7 +2,7 @@
 {
     using Persistence.DbContext;
     using Core.Models;
-    public class MessageService : ServiceBase
+    public class MessageService : ServiceBase, IMessageService
     {
         public MessageService(PartyMakerDbContext _context) : base(_context) { }
 

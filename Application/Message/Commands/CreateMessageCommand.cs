@@ -13,9 +13,9 @@
         public string ReceiverId { get; init; }
         public class Handler : IRequestHandler<CreateMessageCommand, Message>
         {
-            private readonly MessageService messageService;
+            private readonly IMessageService messageService;
             private readonly IUserService userService;
-            public Handler(MessageService _messageService, IUserService _userService)
+            public Handler(IMessageService _messageService, IUserService _userService)
             {
                 messageService = _messageService;
                 userService = _userService;

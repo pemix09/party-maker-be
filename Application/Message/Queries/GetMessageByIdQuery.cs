@@ -12,8 +12,8 @@
 
         public class Handler : IRequestHandler<GetMessageByIdQuery, Message>
         {
-            private readonly MessageService messageService;
-            public Handler(MessageService _messageService)
+            private readonly IMessageService messageService;
+            public Handler(IMessageService _messageService)
             {
                 messageService = _messageService;
             }
