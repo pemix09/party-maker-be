@@ -59,7 +59,6 @@ namespace API.Controllers
             return Ok();
         }
 
-        //Authorize tag is for chechking if user is signed In
         [HttpGet, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AppUserDto>> GetLogged([FromQuery]GetLoggedUserQuery query)
         {
@@ -67,28 +66,11 @@ namespace API.Controllers
             return Ok(user);
         }
 
-        //TODO - to refactor to look better
         [HttpPost, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<string>> RefreshToken()
+        public async Task<ActionResult<string>> RefreshToken(RefreshTokenCommand command)
         {
-            var refreshToken = Request.Cookies["RefreshToken"];
-            var user = await userService.GetCurrentlySignedIn();
-
-            if (user.RefreshToken.Equals(string.Empty))
-            {
-                throw new UserNotAuthenticatedException();
-            }
-            else if (!user.RefreshToken.Equals(refreshToken))
-            {
-                throw new InvalidRefreshTokenException();
-            }
-            else if (user.RefreshTokenExpires < DateTime.Now)
-            {
-                throw new TokenExpiredException();
-            }
-
-            string accessToken = await tokenService.CreateAccessToken(user);
-            return Ok(accessToken);
+            string token = await mediator.Send(command);
+            return Ok(token);
         }
     }
 }
