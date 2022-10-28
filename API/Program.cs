@@ -19,6 +19,8 @@ using Persistence.UnitOfWork;
 using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Infrastructure.Hubs;
+using Infrastructure.NotificationsHandlers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Persistence.Services.Utils;
@@ -86,16 +88,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<EventService>();
-builder.Services.AddScoped<MessageService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<BanService>();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<EntrancePassService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<MailService>();
 builder.Services.AddScoped<AdminService>();
+builder.Services.AddSignalR();
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly);
+builder.Services.AddMediatR(typeof(CreateEventCommand).Assembly, typeof(MessageSentNotificationHandler).Assembly);
 builder.Services.AddSwaggerGen(options => 
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme{
@@ -115,6 +119,7 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
+app.MapHub<MessageHub>("/Messages");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

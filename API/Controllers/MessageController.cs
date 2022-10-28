@@ -1,4 +1,6 @@
-﻿namespace API.Controllers
+﻿using Infrastructure;
+
+namespace API.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using Core.Models;
@@ -18,7 +20,9 @@
         [HttpPost, Authorize(Roles = "User")]
         public async Task<ActionResult> Create([FromBody] CreateMessageCommand command)
         {
-            await mediator.Send(command);
+            var message = await mediator.Send(command);
+            var notification = MessageSentNotification.CreateFromMessage(message);
+            await mediator.Publish(notification);
             return Ok();
         }
 

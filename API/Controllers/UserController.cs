@@ -19,9 +19,9 @@ namespace API.Controllers
     public class UserController : BaseCRUDController
     {
         private TokenService tokenService;
-        private UserService userService;
+        private IUserService userService;
 
-        public UserController(IMediator _mediator, UserManager<AppUser> _userManager, TokenService _tokenService, UserService _userService) : base(_mediator)
+        public UserController(IMediator _mediator, UserManager<AppUser> _userManager, TokenService _tokenService, IUserService _userService) : base(_mediator)
         {
             userService = _userService;
             tokenService = _tokenService;

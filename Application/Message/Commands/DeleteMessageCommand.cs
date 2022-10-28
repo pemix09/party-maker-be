@@ -11,8 +11,8 @@ namespace Application.Message.Commands
 
         public class Handler : IRequestHandler<DeleteMessageCommand, Unit>
         {
-            private readonly MessageService messageService;
-            public Handler(MessageService _messageService)
+            private readonly IMessageService messageService;
+            public Handler(IMessageService _messageService)
             {
                 messageService = _messageService;
             }

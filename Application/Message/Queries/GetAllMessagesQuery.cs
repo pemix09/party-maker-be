@@ -9,8 +9,8 @@ namespace Application.Message.Queries
     {
         public class Handler : IRequestHandler<GetAllMessagesQuery, IEnumerable<Message>>
         {
-            private readonly MessageService messageService;
-            public Handler(MessageService _messageService)
+            private readonly IMessageService messageService;
+            public Handler(IMessageService _messageService)
             {
                 messageService = _messageService;
             }

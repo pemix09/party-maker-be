@@ -11,8 +11,8 @@ namespace Application.User.Commands
         public string Password { get; init; }
         public class Handler : IRequestHandler<LoginUserCommand, string>
         {
-            UserService userService { get; init; }
-            public Handler(UserService _userService)
+            IUserService userService { get; init; }
+            public Handler(IUserService _userService)
             {
                 userService = _userService;
             }

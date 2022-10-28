@@ -21,8 +21,8 @@ public class CreateEventCommand : IRequest<Unit>
     public class Handler : IRequestHandler<CreateEventCommand, Unit>
     {
         private readonly EventService eventService;
-        private readonly UserService userService;
-        public Handler(EventService _eventService, UserService _userService)
+        private readonly IUserService userService;
+        public Handler(EventService _eventService, IUserService _userService)
         {
             eventService = _eventService;
             userService = _userService;

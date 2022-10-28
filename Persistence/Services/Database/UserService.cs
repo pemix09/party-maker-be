@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace Persistence.Services.Database
 {
-    public class UserService : ServiceBase
+    public class UserService : ServiceBase, IUserService
     {
         private UserManager<AppUser> userManager { get; init; }
         private SignInManager<AppUser> signInManager { get; init; }
