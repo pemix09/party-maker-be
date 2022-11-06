@@ -25,10 +25,15 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Persistence.Services.Utils;
 using Microsoft.AspNetCore.Authorization;
+using NLog.Web;
 using Persistence.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
+
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+builder.Host.UseNLog();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PartyMakerDbContext>(options =>
@@ -155,9 +160,19 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-CreateRoles(app).Wait();
-AddSuperAdmins(app).Wait();
-app.Run();
+var logger = NLogBuilder.ConfigureNLog("API/nlog.config.xml").GetCurrentClassLogger();
+try
+{
+    CreateRoles(app).Wait();
+    AddSuperAdmins(app).Wait();
+    app.Run();
+    logger.Info("App started successfully");
+}
+catch (Exception e)
+{
+    logger.Error($"App couldn't have started, reason: {e.Message}");
+}
+
 
 string GetConnectionString()
 {

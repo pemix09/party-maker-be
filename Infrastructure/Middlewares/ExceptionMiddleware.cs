@@ -9,12 +9,12 @@ namespace Infrastructure.Middlewares
     {
         private readonly RequestDelegate next;
 
-        //we will have to add logger manager later
-        //private readonly ILoggerManager logger;
+        private readonly ILogger<ExceptionMiddleware> logger;
 
-        public ExceptionMiddleware(RequestDelegate _next)
+        public ExceptionMiddleware(ILogger<ExceptionMiddleware> _logger,RequestDelegate _next)
         {
             next = _next;
+            logger = _logger;
         }
 
         public async Task InvokeAsync(HttpContext _httpContext)
@@ -27,6 +27,7 @@ namespace Infrastructure.Middlewares
             //catch exception created in this app(custom exceptions)
             catch (BaseAppException _appEx)
             {
+                logger.LogError($"Something went wrong: {_appEx.Message}");
                 await HandleExceptionAsync(_httpContext, _appEx.GetExceptionMessage(), _appEx.GetExceptionCode());
             }
             //catch validation exceptions
@@ -37,7 +38,7 @@ namespace Infrastructure.Middlewares
             catch (Exception _ex)
             {
                 Console.WriteLine(_ex.InnerException);
-                //logger.LogError($"Something went wrong");
+                logger.LogError($"Something went wrong: {_ex.Message}");
                 await HandleExceptionAsync(_httpContext, _ex.Message);
             }
         }
