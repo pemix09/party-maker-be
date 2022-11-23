@@ -22,7 +22,7 @@ namespace Persistence.Services.Utils
             httpContextAccessor = _httpContextAccesor;
         }
 
-        public async Task<string> CreateAccessToken(AppUser _user)
+        public async Task<AccessToken> CreateAccessToken(AppUser _user)
         {
             //list for storing user claims
             ICollection<Claim> claims = new List<Claim>();
@@ -50,14 +50,21 @@ namespace Persistence.Services.Utils
 
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
+            var tokenExpirationDate = DateTime.Now.AddDays(5);
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(5),
+                expires: tokenExpirationDate,
                 signingCredentials: credentials
             );
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            var accessToken = new AccessToken
+            {
+                Token = jwt,
+                Expires = tokenExpirationDate,
+                Created = DateTime.Now
+            };
 
-            return jwt;
+            return accessToken;
         }
 
         public RefreshToken CreateRefreshToken()

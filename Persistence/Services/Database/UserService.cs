@@ -65,7 +65,7 @@ namespace Persistence.Services.Database
 
             await userManager.UpdateAsync(user);
 
-            return new LoginResponse(accessToken, refreshToken.ToString());
+            return new LoginResponse(accessToken.ToString(), refreshToken.ToString());
         }
 
         public async Task Logout()

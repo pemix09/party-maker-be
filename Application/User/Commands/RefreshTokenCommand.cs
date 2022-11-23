@@ -1,3 +1,4 @@
+using Core.UtilityClasses;
 using MediatR;
 using Persistence.Exceptions;
 using Persistence.Services.Database;
@@ -5,9 +6,9 @@ using Persistence.Services.Utils;
 
 namespace Application.User.Commands;
 
-public class RefreshTokenCommand : IRequest<string>
+public class RefreshTokenCommand : IRequest<AccessToken>
 {
-    public class Handler : IRequestHandler<RefreshTokenCommand, string>
+    public class Handler : IRequestHandler<RefreshTokenCommand, AccessToken>
     {
         private IUserService userService { get; init; }
         private IHttpContextAccessor contextAccesor { get; init; }
@@ -18,7 +19,7 @@ public class RefreshTokenCommand : IRequest<string>
             contextAccesor = _httpContextAccesor;
             tokenService = _tokenService;
         }
-        public async Task<string> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        public async Task<AccessToken> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var refreshToken = contextAccesor.HttpContext.Request.Cookies["RefreshToken"];
             var user = await userService.GetCurrentlySignedIn();
@@ -36,7 +37,7 @@ public class RefreshTokenCommand : IRequest<string>
                 throw new TokenExpiredException();
             }
 
-            string accessToken = await tokenService.CreateAccessToken(user);
+            var accessToken = await tokenService.CreateAccessToken(user);
             return accessToken;
         }
     }
