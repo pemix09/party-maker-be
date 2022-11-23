@@ -15,12 +15,18 @@ public class AppUser : IdentityUser
     public string RefreshToken { get; set; }
     public DateTime RefreshTokenExpires { get; set; }
     public DateTime RefreshTokenCreated { get; set; }
+    public string AccessToken { get; set; }
 
     public void SetRefreshToken(RefreshToken _refreshToken)
     {
         RefreshToken = _refreshToken.Token;
         RefreshTokenCreated = _refreshToken.Created;
         RefreshTokenExpires = _refreshToken.Expires;
+    }
+
+    public void SetAccessToken(string _accessToken)
+    {
+        AccessToken = _accessToken;
     }
     private AppUser(string _email, string _userName)
     {

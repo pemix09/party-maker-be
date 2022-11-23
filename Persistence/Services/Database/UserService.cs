@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Core.UtilityClasses;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -47,7 +48,7 @@ namespace Persistence.Services.Database
             mailService.SendAccountConfirmation(_newUser.Email);
         }
 
-        public async Task<string> Login(string _email, string _password)
+        public async Task<LoginResponse> Login(string _email, string _password)
         {
             AppUser user = await userManager.FindByEmailAsync(_email);
 
@@ -57,10 +58,14 @@ namespace Persistence.Services.Database
             }
 
             var refreshToken = tokenService.CreateRefreshToken();
+            var accessToken = await tokenService.CreateAccessToken(user);
+
             user.SetRefreshToken(refreshToken);
+            user.SetAccessToken(accessToken);
+
             await userManager.UpdateAsync(user);
 
-            return await tokenService.CreateAccessToken(user);
+            return new LoginResponse(accessToken, refreshToken.ToString());
         }
 
         public async Task Logout()

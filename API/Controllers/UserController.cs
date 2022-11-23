@@ -3,6 +3,7 @@ using Application.User.Commands;
 using Application.User.Queries;
 using Core.Dto;
 using Core.Models;
+using Core.UtilityClasses;
 using Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -39,9 +40,9 @@ namespace API.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> Login([FromBody]LoginUserCommand command)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody]LoginUserCommand command)
         {
-            string token = await mediator.Send(command);
+            var token = await mediator.Send(command);
             return Ok(token);
         }
 

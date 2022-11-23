@@ -69,21 +69,9 @@ namespace Persistence.Services.Utils
                 Created = DateTime.Now
             };
 
-            SetRefreshToken(token);
             return token;
         }
 
-        private void SetRefreshToken(RefreshToken _newRefreshToken)
-        {
-            var context = httpContextAccessor.HttpContext;
-            
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = _newRefreshToken.Expires
-            };
-            context.Response.Cookies.Append("RefreshToken", _newRefreshToken.Token, cookieOptions);
-        }
     }
 
     
