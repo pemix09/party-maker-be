@@ -1,13 +1,24 @@
-#heroku login
-#if(heroku whoami -eq null)
-heroku login
+#check if user is logged in
+heroku auth:whoami
+if($? -eq $false){
+    heroku login
+}
+
+#login to heroku container -> docker must be turned on
 heroku container:login
+if($? -eq $false){
+    write-output "Docker has to be turned on!"
+}
 
-#build docker container
-docker build -t party-maker-be .
+#if user logged in and docker is running
+if($?){
 
-#push newly created container to heroku:
-heroku container:push -a party-maker-be web
+    #build docker container
+    docker build -t party-maker-be .
 
-#and release it:
-heroku container:release -a party-maker-be web
+    #push newly created container to heroku:
+    heroku container:push -a party-maker-be web
+
+    #and release it:
+    heroku container:release -a party-maker-be web
+}
