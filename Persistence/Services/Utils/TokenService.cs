@@ -72,11 +72,16 @@ namespace Persistence.Services.Utils
             RefreshToken token = new RefreshToken
             {
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                Expires = DateTime.Now.AddDays(15),
+                Expires = GetNewRefreshTokenExpirationDate(),
                 Created = DateTime.Now
             };
 
             return token;
+        }
+
+        public DateTime GetNewRefreshTokenExpirationDate()
+        {
+            return DateTime.Now.AddDays(15);
         }
 
     }
