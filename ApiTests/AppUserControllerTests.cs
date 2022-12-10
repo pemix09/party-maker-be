@@ -58,5 +58,24 @@ public class AppUserControllerTests
         //Assert
         Assert.IsType<OkResult>(result);
     }
+
+    [Fact]
+    public async Task RegisterCommand_WeakPassword_ShouldFail()
+    {
+        //Arrange
+        var serviceFactory = new Mock<ServiceFactory>();
+        var realMediator = new Mediator(serviceFactory.Object);
+
+
+        RegisterUserCommand command = new RegisterUserCommand
+        {
+            UserName = "Test2131DDD",
+            Email = "pewmix@dsad.com",
+            Password = "easy"
+        };
+
+        //Act and assert
+        await Assert.ThrowsAnyAsync<Exception>(async () => await realMediator.Send(command));
+    }
     
 }
