@@ -34,5 +34,17 @@ public class AppUserControllerTests
         //Assert
         mediator.Verify(x => x.Send(It.IsAny<RegisterUserCommand>(), It.IsAny<CancellationToken>()));
     }
+
+    [Fact]
+    public async Task RegisterControllerMethod_ShouldReturnOk()
+    {
+        //Arrange
+        mediator
+            .Setup(m => m.Send(It.IsAny<RegisterUserCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Unit.Value) //<-- return Task to allow await to continue
+            .Verifiable("Notification was not sent.");
+
+        var userController = new UserController()
+    }
     
 }
