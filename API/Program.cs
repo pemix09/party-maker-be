@@ -64,7 +64,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .GetBytes(builder.Configuration["JWT:Secret"])),
             ValidateIssuer = false,
             ValidateAudience = false,
-            RequireExpirationTime = true
+            RequireExpirationTime = true,
+            ValidateLifetime= true
         };
         JwtOptions.Events = new JwtBearerEvents
         {
