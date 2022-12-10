@@ -67,7 +67,7 @@ namespace API.Controllers
             return Ok(user);
         }
 
-        [HttpPost, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
+        [HttpPost]
         public async Task<ActionResult<AccessToken>> RefreshToken(RefreshTokenCommand command)
         {
             var token = await mediator.Send(command);

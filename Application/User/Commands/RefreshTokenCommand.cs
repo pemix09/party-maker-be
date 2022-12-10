@@ -8,6 +8,8 @@ namespace Application.User.Commands;
 
 public class RefreshTokenCommand : IRequest<AccessToken>
 {
+    public string AccessToken { get; init; }
+    public string RefreshToken { get; init; }
     public class Handler : IRequestHandler<RefreshTokenCommand, AccessToken>
     {
         private IUserService userService { get; init; }
