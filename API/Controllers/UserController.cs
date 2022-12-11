@@ -19,13 +19,10 @@ namespace API.Controllers
     [ApiController]
     public class UserController : BaseCRUDController
     {
-        private TokenService tokenService;
-        private IUserService userService;
 
-        public UserController(IMediator _mediator, UserManager<AppUser> _userManager, TokenService _tokenService, IUserService _userService) : base(_mediator)
+
+        public UserController(IMediator _mediator) : base(_mediator)
         {
-            userService = _userService;
-            tokenService = _tokenService;
         }
 
         [HttpPost]
@@ -67,7 +64,7 @@ namespace API.Controllers
             return Ok(user);
         }
 
-        [HttpPost, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
+        [HttpPost]
         public async Task<ActionResult<AccessToken>> RefreshToken(RefreshTokenCommand command)
         {
             var token = await mediator.Send(command);

@@ -7,6 +7,7 @@ using Application.User.Commands;
 using Core.Models;
 using DataFaker;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Persistence.Services.Database;
 using Xunit;
@@ -33,6 +34,48 @@ public class AppUserControllerTests
 
         //Assert
         mediator.Verify(x => x.Send(It.IsAny<RegisterUserCommand>(), It.IsAny<CancellationToken>()));
+    }
+
+    [Fact]
+    public async Task RegisterControllerMethod_ShouldReturnOk()
+    {
+        //Arange
+        mediator
+            .Setup(m => m.Send(It.IsAny<RegisterUserCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Unit.Value) //<-- return Task to allow await to continue
+            .Verifiable("Notification was not sent.");
+
+        var userController = new UserController(mediator.Object);
+
+        //Act
+        var result = await userController.Register(new RegisterUserCommand
+        {
+            UserName= "Test2131DDD",
+            Email = "pewmix@dsad.com",
+            Password = "dasd@$2..//DDD{}Unique"
+        });
+
+        //Assert
+        Assert.IsType<OkResult>(result);
+    }
+
+    [Fact]
+    public async Task RegisterCommand_WeakPassword_ShouldFail()
+    {
+        //Arrange
+        var serviceFactory = new Mock<ServiceFactory>();
+        var realMediator = new Mediator(serviceFactory.Object);
+
+
+        RegisterUserCommand command = new RegisterUserCommand
+        {
+            UserName = "Test2131DDD",
+            Email = "pewmix@dsad.com",
+            Password = "easy"
+        };
+
+        //Act and assert
+        await Assert.ThrowsAnyAsync<Exception>(async () => await realMediator.Send(command));
     }
     
 }
