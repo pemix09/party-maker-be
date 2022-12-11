@@ -13,8 +13,8 @@ using Persistence.DbContext;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(PartyMakerDbContext))]
-    [Migration("20220824154000_Fix for ban model")]
-    partial class Fixforbanmodel
+    [Migration("20221211094342_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,8 +33,17 @@ namespace Persistence.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Avatar")
+                    b.Property<string>("AccessToken")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("AccessTokenCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("AccessTokenExpires")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Avatar")
                         .HasColumnType("text");
 
                     b.Property<int?>("BanId")
@@ -75,7 +84,6 @@ namespace Persistence.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Photo")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("Premium")
@@ -83,6 +91,16 @@ namespace Persistence.Migrations
 
                     b.Property<float>("Rating")
                         .HasColumnType("real");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("RefreshTokenCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("RefreshTokenExpires")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
@@ -149,8 +167,8 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float?>("Price")
-                        .HasColumnType("real");
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -178,8 +196,9 @@ namespace Persistence.Migrations
                     b.Property<int>("MusicGenreId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("OrganizatorId")
-                        .HasColumnType("integer");
+                    b.Property<string>("OrganizerId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<List<int>>("ParticipatorsIds")
                         .HasColumnType("integer[]");
@@ -192,6 +211,10 @@ namespace Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Place")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("text");
 
