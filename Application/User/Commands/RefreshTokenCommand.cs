@@ -34,6 +34,7 @@ public class RefreshTokenCommand : IRequest<AccessToken>
             contextAccesor = _httpContextAccesor;
             tokenService = _tokenService;
             config = _config;
+            userManager= _userManager;
         }
         public async Task<AccessToken> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
@@ -52,7 +53,7 @@ public class RefreshTokenCommand : IRequest<AccessToken>
             SecurityToken securityToken;
             var principal = tokenHandler.ValidateToken(request.AccessToken, tokenValidationParameters, out securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            if (jwtSecurityToken == null)
                 throw new SecurityTokenException("Invalid token");
 
             var user = await userService.GetUserById(userManager.GetUserId(principal));

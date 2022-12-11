@@ -57,15 +57,30 @@ namespace Persistence.Services.Database
                 throw new UserEmailNotFoundException(_email);
             }
 
-            var refreshToken = tokenService.CreateRefreshToken();
-            var accessToken = await tokenService.CreateAccessToken(user);
+            if(user.RefreshToken == null)
+            {
+                var refreshToken = tokenService.CreateRefreshToken();
+                user.SetRefreshToken(refreshToken);
+            }
+            else if(user.RefreshTokenExpires <= DateTime.Now)
+            {
+                user.RefreshTokenExpires = tokenService.GetNewRefreshTokenExpirationDate();
+            }
 
-            user.SetRefreshToken(refreshToken);
+            var accessToken = await tokenService.CreateAccessToken(user);
             user.SetAccessToken(accessToken);
 
             await userManager.UpdateAsync(user);
 
-            return new LoginResponse(accessToken, refreshToken);
+            var refreshTokenFromUser = new RefreshToken()
+            {
+                Token = user.RefreshToken,
+                Expires = user.RefreshTokenExpires,
+                Created = user.RefreshTokenCreated
+            };
+
+
+            return new LoginResponse(accessToken, refreshTokenFromUser);
         }
 
         public async Task Logout()
