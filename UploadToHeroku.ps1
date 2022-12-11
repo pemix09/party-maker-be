@@ -7,12 +7,10 @@ if($? -eq $false){
 #login to heroku container -> docker must be turned on
 heroku container:login
 if($? -eq $false){
-    write-output "Docker has to be turned on!"
+    Write-Error "Docker has to be turned on!"
 }
-
 #if user logged in and docker is running
-if($?){
-
+else{
     #build docker container
     docker build -t party-maker-be .
 
