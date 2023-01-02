@@ -18,7 +18,7 @@ public class Message
     public string ReceiverId { get; set; }
     
     [Required]
-    public DateTime Date { get; set; }
+    public DateTimeOffset Date { get; set; }
     
     [Required]
     public int EventId { get; set; }
@@ -33,7 +33,7 @@ public class Message
         ReceiverId = _receiverId;
         EventId = _eventID;
         Content = _content;
-        Date = DateTime.Now;
+        Date = DateTimeOffset.Now;
     }
     public static Message Create(string _senderId, string _receiverId, int _eventID, string _content)
     {

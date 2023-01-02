@@ -13,11 +13,11 @@ public class AppUser : IdentityUser
     public int? BanId { get; set; }
     public List<Event>? Followed { get; set; }
     public string? RefreshToken { get; set; }
-    public DateTime RefreshTokenExpires { get; set; }
-    public DateTime RefreshTokenCreated { get; set; }
+    public DateTimeOffset RefreshTokenExpires { get; set; }
+    public DateTimeOffset RefreshTokenCreated { get; set; }
     public string? AccessToken { get; set; }
-    public DateTime AccessTokenExpires { get; set; }
-    public DateTime AccessTokenCreated { get; set; }
+    public DateTimeOffset AccessTokenExpires { get; set; }
+    public DateTimeOffset AccessTokenCreated { get; set; }
 
     public void SetRefreshToken(RefreshToken _refreshToken)
     {

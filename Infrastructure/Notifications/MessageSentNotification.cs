@@ -8,13 +8,13 @@ public class MessageSentNotification : INotification
     public string ToUserId { get; }
     public string FromUserId { get; }
     public string MessageContent { get; }
-    public DateTime MessageTime { get; init; }
+    public DateTimeOffset MessageTime { get; init; }
 
     private MessageSentNotification(
         string toUserId,
         string fromUserId,
         string _messageContent,
-        DateTime _messageTime)
+        DateTimeOffset _messageTime)
     {
         ToUserId = toUserId;
         FromUserId = fromUserId;

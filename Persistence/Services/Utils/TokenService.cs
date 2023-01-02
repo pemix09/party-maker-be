@@ -61,7 +61,7 @@ namespace Persistence.Services.Utils
             {
                 Token = jwt,
                 Expires = tokenExpirationDate,
-                Created = DateTime.Now
+                Created = DateTimeOffset.Now
             };
 
             return accessToken;
@@ -73,15 +73,15 @@ namespace Persistence.Services.Utils
             {
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
                 Expires = GetNewRefreshTokenExpirationDate(),
-                Created = DateTime.Now
+                Created = DateTimeOffset.Now
             };
 
             return token;
         }
 
-        public DateTime GetNewRefreshTokenExpirationDate()
+        public DateTimeOffset GetNewRefreshTokenExpirationDate()
         {
-            return DateTime.Now.AddDays(15);
+            return DateTimeOffset.Now.AddDays(15);
         }
 
     }

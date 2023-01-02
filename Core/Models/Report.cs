@@ -18,7 +18,7 @@ public class Report
     public string ReportedId { get; private set; }
     
     [Required]
-    public DateTime Date { get; private set; }
+    public DateTimeOffset Date { get; private set; }
     
     [Required]
     public string Reason { get; private set; }
@@ -32,7 +32,7 @@ public class Report
         this.ReporterId = _reporterId;
         this.ReportedId = _reportedId;
         this.Reason = _reason;
-        this.Date = DateTime.Now;
+        this.Date = DateTimeOffset.Now;
     }
 
     public static Report Create(string reporterId, string reportedId, string reason)

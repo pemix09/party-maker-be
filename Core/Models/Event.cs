@@ -16,7 +16,7 @@ public class Event
     public string Description { get; set; }
     
     [Required]
-    public DateTime Date { get; set; }
+    public DateTimeOffset Date { get; set; }
     
     [Required]
     public string Place { get; set; }
