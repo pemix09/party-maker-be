@@ -17,6 +17,8 @@ public class CreateEventCommand : IRequest<Unit>
     public string Photo { get; init; }
     public int MusicGenreId { get; set; }
     public string Type { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
 
     public class Handler : IRequestHandler<CreateEventCommand, Unit>
     {
@@ -40,7 +42,9 @@ public class CreateEventCommand : IRequest<Unit>
                 request.PassId,
                 request.Photo,
                 request.MusicGenreId,
-                request.Type);
+                request.Type,
+                request.Latitude,
+                request.Longitude);
 
             await eventService.AddToDataBase(_event);
 

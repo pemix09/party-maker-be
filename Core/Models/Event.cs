@@ -46,7 +46,9 @@ public class Event
         int pass,
         string photo,
         int musicGenreId,
-        string type)
+        string type,
+        double latitude,
+        double longitude)
     {
         this.Description = description;
         this.Date = DateTime.Now;
@@ -55,6 +57,8 @@ public class Event
         this.PassId = pass;
         this.Photo = photo;
         this.MusicGenreId = musicGenreId;
+        this.Latitude = latitude;
+        this.Longitude = longitude;
         Type = type;
     }
 
@@ -65,9 +69,11 @@ public class Event
         int EntrancePassId,
         string photo,
         int musicGenreId,
-        string type
+        string type,
+        double latitude,
+        double longitude
     )
     {
-        return new Event(description, place, organizerId, EntrancePassId, photo, musicGenreId, type);
+        return new Event(description, place, organizerId, EntrancePassId, photo, musicGenreId, type, latitude, longitude) ;
     }
 }
