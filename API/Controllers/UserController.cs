@@ -39,8 +39,8 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<LoginResponse>> Login([FromBody]LoginUserCommand command)
         {
-            var token = await mediator.Send(command);
-            return Ok(token);
+            var loginResponse = await mediator.Send(command);
+            return Ok(loginResponse);
         }
 
         [HttpGet]
