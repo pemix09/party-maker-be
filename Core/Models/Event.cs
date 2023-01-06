@@ -25,7 +25,13 @@ public class Event
     public string OrganizerId { get; set; }
     
     public List<int>? ParticipatorsIds { get; set; }
-    
+
+    [Required]
+    public double Latitude { get; set; }
+
+    [Required]
+    public double Longitude { get; set; }
+
     [Required]
     public int PassId { get; set; }
     public string Photo { get; set; }
