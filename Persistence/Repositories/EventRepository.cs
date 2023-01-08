@@ -24,8 +24,10 @@ public class EventRepository : Repository<Event>, IEventRepository
 
         if(string.IsNullOrWhiteSpace(query) == false)
         {
-            events = PartyMakerDbContext.Events.Where(x => x.Name.StartsWith(query));
+            events = events.Where(x => x.Name.StartsWith(query));
         }
+        events = events.Where(x => x.Longitude >= lonWest && x.Longitude <= lonEast);
+        events = events.Where(x => x.Latitude >= latSouth && x.Latitude <= latNorth);
 
         return events.ToList();
     }
