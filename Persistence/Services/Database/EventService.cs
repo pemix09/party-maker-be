@@ -33,5 +33,10 @@
         {
             return await database.Events.GetAll();
         }
+
+        public IEnumerable<Event> GetForAreaByQuery(string query, double latNorth, double latSouth, double lonEast, double lonWest)
+        {
+            return database.Events.GetForAreaByQuery(query, latNorth, latSouth, lonEast, lonWest);
+        }
     }
 }

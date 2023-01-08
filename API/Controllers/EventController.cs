@@ -7,6 +7,7 @@ namespace API.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Application.Message.Commands;
     using Microsoft.AspNetCore.Authorization;
+    using Application.Event.Queries;
 
     //below attribute is for jwt authorization
     [Authorize(AuthenticationSchemes = "Bearer")]
@@ -45,10 +46,16 @@ namespace API.Controllers
         }
 
         [HttpGet, Authorize(Roles = "User")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetAll([FromQuery] GetAllEventsQuery query)
+        public async Task<ActionResult<IEnumerable<Event>>> GetForAreaByQuery([FromQuery] GetAllEventsQuery query)
         {
             IEnumerable<Event> events = await mediator.Send(query);
             return Ok(events);
+        }
+
+        [HttpGet, Authorize(Roles = "User")]
+        public async Task<ActionResult<IEnumerable<Event>>> GetForArea([FromQuery] GetAllForAreaByQuery query)
+        {
+            return Ok(await mediator.Send(query));
         }
     }
 }

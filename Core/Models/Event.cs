@@ -11,6 +11,9 @@ public class Event
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
+
+    [Required]
+    public string Name { get; set; }
     
     [Required]
     public string Description { get; set; }
@@ -40,6 +43,7 @@ public class Event
 
     public Event(){}
     private Event(
+        string name,
         string description,
         string place,
         string organizerId,
@@ -50,6 +54,7 @@ public class Event
         double latitude,
         double longitude)
     {
+        this.Name = name;
         this.Description = description;
         this.Date = DateTime.Now;
         this.Place = place;
@@ -63,6 +68,7 @@ public class Event
     }
 
     public static Event Create(
+        string name,
         string description,
         string place,
         string organizerId,
@@ -74,6 +80,6 @@ public class Event
         double longitude
     )
     {
-        return new Event(description, place, organizerId, EntrancePassId, photo, musicGenreId, type, latitude, longitude) ;
+        return new Event(name, description, place, organizerId, EntrancePassId, photo, musicGenreId, type, latitude, longitude) ;
     }
 }

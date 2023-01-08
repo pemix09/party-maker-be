@@ -18,6 +18,18 @@ public class EventRepository : Repository<Event>, IEventRepository
         return PartyMakerDbContext.Events.Take(count);
     }
 
+    public IEnumerable<Event> GetForAreaByQuery(string query, double latNorth, double latSouth, double lonEast, double lonWest)
+    {
+        IEnumerable<Event> events = PartyMakerDbContext.Events;
+
+        if(string.IsNullOrWhiteSpace(query) == false)
+        {
+            events = PartyMakerDbContext.Events.Where(x => x.Name.StartsWith(query));
+        }
+
+        return events.ToList();
+    }
+
     public IEnumerable<Event> GetOrganizerEvents(string organizerId)
     {
         return PartyMakerDbContext.Events
@@ -32,4 +44,5 @@ public class EventRepository : Repository<Event>, IEventRepository
 
         return Task.CompletedTask;
     }
+
 }

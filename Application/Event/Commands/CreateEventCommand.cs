@@ -36,6 +36,7 @@ public class CreateEventCommand : IRequest<Unit>
             AppUser organizer = await userService.GetCurrentlySignedIn();
             
             Event _event = Event.Create(
+                request.Name,
                 request.Description,
                 request.Place,
                 organizer.Id,
