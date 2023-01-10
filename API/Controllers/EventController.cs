@@ -57,5 +57,11 @@ namespace API.Controllers
         {
             return Ok(await mediator.Send(query));
         }
+
+        [HttpGet, Authorize(Roles = "User")]
+        public async Task<ActionResult<IEnumerable<Event>>> GetAllOfCurrentUser([FromQuery] GetAllOfCurrentUserQuery query)
+        {
+            return Ok(await mediator.Send(query));
+        }
     }
 }

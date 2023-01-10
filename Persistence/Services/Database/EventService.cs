@@ -38,5 +38,10 @@
         {
             return database.Events.GetForAreaByQuery(query, latNorth, latSouth, lonEast, lonWest);
         }
+
+        public IEnumerable<Event> GetAllForCurrentUser(string userId)
+        {
+            return database.Events.GetOrganizerEvents(userId);
+        }
     }
 }

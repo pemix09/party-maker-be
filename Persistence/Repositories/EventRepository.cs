@@ -35,7 +35,8 @@ public class EventRepository : Repository<Event>, IEventRepository
     public IEnumerable<Event> GetOrganizerEvents(string organizerId)
     {
         return PartyMakerDbContext.Events
-            .Where(e => e.OrganizerId == organizerId);
+            .Where(e => e.OrganizerId == organizerId)
+            .ToList();
     }
 
     public Task RemoveAllForUser(string _userId)
