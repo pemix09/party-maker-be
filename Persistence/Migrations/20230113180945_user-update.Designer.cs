@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence.DbContext;
@@ -12,9 +13,10 @@ using Persistence.DbContext;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(PartyMakerDbContext))]
-    partial class PartyMakerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230113180945_user-update")]
+    partial class userupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,9 +64,6 @@ namespace Persistence.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
-
-                    b.Property<List<int>>("Followed")
-                        .HasColumnType("integer[]");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -192,6 +191,9 @@ namespace Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("text");
+
                     b.Property<DateTimeOffset>("Date")
                         .HasColumnType("timestamp with time zone");
 
@@ -235,6 +237,8 @@ namespace Persistence.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Events");
                 });
@@ -479,6 +483,13 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Core.Models.Event", b =>
+                {
+                    b.HasOne("Core.Models.AppUser", null)
+                        .WithMany("Followed")
+                        .HasForeignKey("AppUserId");
+                });
+
             modelBuilder.Entity("Core.Models.Notification", b =>
                 {
                     b.HasOne("Core.Models.Event", "Event")
@@ -539,6 +550,11 @@ namespace Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Models.AppUser", b =>
+                {
+                    b.Navigation("Followed");
                 });
 #pragma warning restore 612, 618
         }

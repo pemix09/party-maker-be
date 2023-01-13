@@ -3,11 +3,12 @@
 namespace Application.Event.Queries
 {
     using Core.Models;
+    using Core.Responses;
     using Persistence.Services.Database;
 
-    public class GetAllOfCurrentUserQuery : IRequest<IEnumerable<Event>>
+    public class GetAllOfCurrentUserQuery : IRequest<GetAllEventsForCurrentUserResponse>
     {
-        public class Handler : IRequestHandler<GetAllOfCurrentUserQuery, IEnumerable<Event>>
+        public class Handler : IRequestHandler<GetAllOfCurrentUserQuery, GetAllEventsForCurrentUserResponse>
         {
             private readonly EventService eventService;
             private readonly IUserService userService;
@@ -17,11 +18,21 @@ namespace Application.Event.Queries
                 userService = _userService;
             }
 
-            public async Task<IEnumerable<Event>> Handle(GetAllOfCurrentUserQuery request, CancellationToken cancellationToken)
+            public async Task<GetAllEventsForCurrentUserResponse> Handle(GetAllOfCurrentUserQuery request, CancellationToken cancellationToken)
             {
                 var currentUser = await userService.GetCurrentlySignedIn();
+                var organized = eventService.GetOrganizedByCurrentUser(currentUser.Id);
+                IEnumerable<Event> followed = new List<Event>();
+                if(currentUser.Followed != null)
+                {
+                    followed = await eventService.GetFollowedEvents(currentUser.Followed);
+                }
 
-                return eventService.GetAllForCurrentUser(currentUser.Id);
+                return new GetAllEventsForCurrentUserResponse()
+                {
+                    Organized = organized.ToList(),
+                    Followed = followed.ToList()
+                };
             }
         }
     }

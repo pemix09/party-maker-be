@@ -8,11 +8,14 @@ public class AppUser : IdentityUser
 {
     public string? Photo { get; set; }
     public string? Avatar { get; set; }
-    public float Rating { get; set; }
+    public float AvarageRating { get; set; }
+    public int AmmountOfRatings { get; set; }
+    public float[] Ratings { get; set; }
     public bool Premium { get; set; }
     public int? BanId { get; set; }
-    public List<Event>? Followed { get; set; }
+    public List<int>? Followed { get; set; }
     public string? RefreshToken { get; set; }
+    public DateTimeOffset RegistrationDate { get; set; }
     public DateTimeOffset RefreshTokenExpires { get; set; }
     public DateTimeOffset RefreshTokenCreated { get; set; }
     public string? AccessToken { get; set; }
@@ -36,8 +39,9 @@ public class AppUser : IdentityUser
     {
         base.Email = _email;
         base.UserName = _userName;
-        Rating = 0;
+        AvarageRating = 5;
         Premium = false;
+        RegistrationDate = DateTimeOffset.Now;
     }
     public AppUser() { }
     public static AppUser Create(string _email, string _userName)

@@ -8,5 +8,7 @@
         public string Photo { get; set; }
         public string Avatar { get; set; }
         public string Role { get; set; }
+        public float AvarageRating { get; set; }
+        public DateTimeOffset RegistrationDate { get; set; }
     }
 }

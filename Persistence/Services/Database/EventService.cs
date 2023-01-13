@@ -39,9 +39,24 @@
             return database.Events.GetForAreaByQuery(query, latNorth, latSouth, lonEast, lonWest);
         }
 
-        public IEnumerable<Event> GetAllForCurrentUser(string userId)
+        public IEnumerable<Event> GetOrganizedByCurrentUser(string userId)
         {
             return database.Events.GetOrganizerEvents(userId);
+        }
+
+        public async Task<IEnumerable<Event>> GetFollowedEvents(List<int> eventsId)
+        {
+            List<Event> followed = new List<Event>();
+            
+            foreach(var id in eventsId)
+            {
+                var searchedEvent = await database.Events.Get(id);
+                if(searchedEvent != null)
+                {
+                    followed.Add(searchedEvent);
+                }
+            }
+            return followed;
         }
     }
 }
