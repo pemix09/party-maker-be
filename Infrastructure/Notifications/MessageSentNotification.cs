@@ -11,12 +11,10 @@ public class MessageSentNotification : INotification
     public DateTimeOffset MessageTime { get; init; }
 
     private MessageSentNotification(
-        string toUserId,
         string fromUserId,
         string _messageContent,
         DateTimeOffset _messageTime)
     {
-        ToUserId = toUserId;
         FromUserId = fromUserId;
         MessageContent = _messageContent;
         MessageTime = _messageTime; 
@@ -24,6 +22,6 @@ public class MessageSentNotification : INotification
 
     public static MessageSentNotification CreateFromMessage(Message _message)
     {
-        return new MessageSentNotification(_message.ReceiverId, _message.SenderId, _message.Content, _message.Date);
+        return new MessageSentNotification(_message.SenderId, _message.Content, _message.Date);
     }
 }

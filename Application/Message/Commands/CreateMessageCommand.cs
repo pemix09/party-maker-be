@@ -10,7 +10,6 @@
     {
         public string Content { get; init; }
         public int EventId { get; init; }
-        public string ReceiverId { get; init; }
         public class Handler : IRequestHandler<CreateMessageCommand, Message>
         {
             private readonly IMessageService messageService;
@@ -25,7 +24,7 @@
                 await new CreateMessageValidator().ValidateAndThrowAsync(request, cancellationToken);
 
                 AppUser sender = await  userService.GetCurrentlySignedIn();
-                Message message = Message.Create(sender.Id, request.ReceiverId, request.EventId, request.Content);
+                Message message = Message.Create(sender.Id, request.EventId, request.Content);
                 await messageService.AddToDataBase(message);
 
                 return message;
