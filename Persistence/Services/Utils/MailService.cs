@@ -17,7 +17,7 @@
             appName = configuration.GetSection("AppName").Value;
         }
 
-        public void SendAccountConfirmation(string _emailTo)
+        public async Task SendAccountConfirmation(string _emailTo)
         {
 
             var email = new MimeMessage();
@@ -30,10 +30,10 @@
                 Text = "To confirm your account click this link:"
             };
 
-            SendEmail(email);
+            await SendEmail(email);
         }
 
-        private void SendEmail(MimeMessage _email)
+        private async Task SendEmail(MimeMessage _email)
         {
             string smtpServerName = configuration.GetSection("EmailSettings:SmtpServer").Value;
             int smtpPort = Int32.Parse(configuration.GetSection("EmailSettings:SmtpPort").Value);
@@ -41,10 +41,17 @@
             string password = configuration.GetSection("EmailSettings:Password").Value;
             using var smtpClient = new SmtpClient();
 
-            smtpClient.Connect(smtpServerName, smtpPort, MailKit.Security.SecureSocketOptions.StartTls);
-            smtpClient.Authenticate(login, password);
-            smtpClient.Send(_email);
-            smtpClient.Disconnect(true);
+            try
+            {
+                smtpClient.Connect(smtpServerName, smtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+                smtpClient.Authenticate(login, password);
+                var res = await smtpClient.SendAsync(_email);
+                smtpClient.Disconnect(true);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

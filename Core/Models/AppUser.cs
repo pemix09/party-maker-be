@@ -8,10 +8,10 @@ public class AppUser : IdentityUser
 {
     public string? Photo { get; set; }
     public string? Avatar { get; set; }
-    public float AvarageRating { get; set; }
-    public int AmmountOfRatings { get; set; }
-    public float[] Ratings { get; set; }
-    public bool Premium { get; set; }
+    public float? AvarageRating { get; set; }
+    public int? AmmountOfRatings { get; set; }
+    public float[]? Ratings { get; set; }
+    public bool? Premium { get; set; }
     public int? BanId { get; set; }
     public List<int>? Followed { get; set; }
     public string? RefreshToken { get; set; }

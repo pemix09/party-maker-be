@@ -45,7 +45,7 @@ namespace Persistence.Services.Database
 
             await userManager.AddPasswordAsync(_newUser, _password);
             await userManager.AddToRoleAsync(_newUser, "User");
-            mailService.SendAccountConfirmation(_newUser.Email);
+            //mailService.SendAccountConfirmation(_newUser.Email);
         }
 
         public async Task<LoginResponse> Login(string _email, string _password)

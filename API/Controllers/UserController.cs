@@ -43,7 +43,7 @@ namespace API.Controllers
             return Ok(loginResponse);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Logout([FromQuery]LogoutUserCommand command)
         {
             await mediator.Send(command);
