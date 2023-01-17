@@ -53,7 +53,7 @@ namespace API.Controllers
         }
 
         [HttpGet, Authorize(Roles = "User")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetForArea([FromQuery] GetAllForAreaByQuery query)
+        public async Task<ActionResult<IEnumerable<Event>>> GetForArea([FromQuery] GetAllForArea query)
         {
             return Ok(await mediator.Send(query));
         }

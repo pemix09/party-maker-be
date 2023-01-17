@@ -32,6 +32,12 @@ public class EventRepository : Repository<Event>, IEventRepository
         return events.ToList();
     }
 
+    public IEnumerable<Event> GetForArea(double latNorth, double latSouth, double lonEast, double lonWest)
+    {
+        return PartyMakerDbContext.Events
+            .Where(x => x.Longitude >= lonWest && x.Longitude <= lonEast && x.Latitude >= latSouth && x.Latitude <= latNorth);
+    }
+
     public IEnumerable<Event> GetOrganizerEvents(string organizerId)
     {
         return PartyMakerDbContext.Events
