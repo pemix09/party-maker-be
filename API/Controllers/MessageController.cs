@@ -8,6 +8,7 @@ namespace API.Controllers
     using Application.Message.Commands;
     using Application.Message.Queries;
     using Microsoft.AspNetCore.Authorization;
+    using Core.Responses;
 
     //below attribute is for jwt authorization
     [Authorize(AuthenticationSchemes = "Bearer")]
@@ -48,11 +49,9 @@ namespace API.Controllers
         }
 
         [HttpGet, Authorize(Roles = "User")]
-        public async Task<ActionResult<IEnumerable<Message>>> GetAllByUser([FromQuery] GetAllMessagesQuery query)
+        public async Task<ActionResult<IEnumerable<Message>>> GetAllForParty([FromQuery] GetAllMessagesQuery query)
         {
-            IEnumerable<Message> messages = await mediator.Send(query);
-            return Ok(messages);
-
+            return Ok(await mediator.Send(query));
         }
     }
 }

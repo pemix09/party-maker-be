@@ -32,5 +32,15 @@
         {
             return await database.Messages.GetAll();
         }
+
+        public async Task<IEnumerable<Message>> GetAllForUser(string userId, int eventId)
+        {
+            return await database.Messages.GetAllForUser(userId, eventId);
+        }
+
+        public async Task<IEnumerable<Message>> GetAllForEvent(int eventId)
+        {
+            return await database.Messages.GetAllForEvent(eventId);
+        }
     }
 }

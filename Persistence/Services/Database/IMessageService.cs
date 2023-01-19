@@ -9,4 +9,6 @@ public interface IMessageService
     Task DeleteFromDataBase(long _id);
     Task<Message> GetByIdFromDataBase(long _id);
     Task<IEnumerable<Message>> GetAllFromDataBase();
+    Task<IEnumerable<Message>> GetAllForUser(string userId, int eventId);
+    Task<IEnumerable<Message>> GetAllForEvent(int eventId);
 }

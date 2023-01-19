@@ -27,7 +27,7 @@ public class Event
     [Required]
     public string OrganizerId { get; set; }
     
-    public List<int>? ParticipatorsIds { get; set; }
+    public List<string>? ParticipatorsIds { get; set; }
 
     [Required]
     public double Latitude { get; set; }
