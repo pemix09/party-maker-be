@@ -11,4 +11,5 @@ public interface IEventRepository : IRepository<Event>
     Task RemoveAllForUser(string _userId);
     IEnumerable<Event> GetForAreaByQuery(string query,double latNorth,double latSouth,double lonEast,double lonWest);
     IEnumerable<Event> GetForArea(double latNorth, double latSouth, double lonEast, double lonWest);
+    IEnumerable<Event> GetByQuery(string query);
 }

@@ -54,4 +54,8 @@ public class EventRepository : Repository<Event>, IEventRepository
         return Task.CompletedTask;
     }
 
+    public IEnumerable<Event> GetByQuery(string query)
+    {
+        return PartyMakerDbContext.Events.Where(party => party.Name.StartsWith(query)).ToList();
+    }
 }

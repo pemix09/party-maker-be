@@ -60,6 +60,12 @@ namespace API.Controllers
         }
 
         [HttpGet, Authorize(Roles = "User")]
+        public async Task<ActionResult<IEnumerable<Event>>> GetByQuery([FromQuery] GetEventsByQuery query)
+        {
+            return Ok(await mediator.Send(query));
+        }
+
+        [HttpGet, Authorize(Roles = "User")]
         public async Task<ActionResult<IEnumerable<Event>>> GetAllOfCurrentUser([FromQuery] GetAllOfCurrentUserQuery query)
         {
             return Ok(await mediator.Send(query));
