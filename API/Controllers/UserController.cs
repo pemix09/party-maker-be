@@ -65,10 +65,16 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<AccessToken>> RefreshToken(RefreshTokenCommand command)
+        public async Task<ActionResult<AccessToken>> RefreshToken([FromBody]RefreshTokenCommand command)
         {
             var token = await mediator.Send(command);
             return Ok(token);
+        }
+
+        [HttpGet, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult<AppUserDto>> GetById([FromQuery]GetUserByIdQuery query)
+        {
+            return Ok(await mediator.Send(query));
         }
     }
 }
