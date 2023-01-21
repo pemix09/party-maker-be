@@ -49,6 +49,37 @@ namespace Persistence.Services.Database
             //mailService.SendAccountConfirmation(_newUser.Email);
         }
 
+        public async Task NotParticipateInEvent(int eventId)
+        {
+            var user = await GetCurrentlySignedIn();
+
+            //initialize followed
+            if (user != null && user.ParticipatesIn == null)
+            {
+                user.ParticipatesIn = new List<int>();
+            }
+            if (user != null && user.ParticipatesIn.Contains(eventId) == true)
+            {
+                user.ParticipatesIn.Remove(eventId);
+                await UserManager.UpdateAsync(user);
+            }
+        }
+        public async Task ParticipateInEvent(int eventId)
+        {
+            var user = await GetCurrentlySignedIn();
+
+            //initialize followed
+            if (user != null && user.ParticipatesIn == null)
+            {
+                user.ParticipatesIn = new List<int>();
+            }
+            if (user != null && user.ParticipatesIn.Contains(eventId) == false)
+            {
+                user.ParticipatesIn.Add(eventId);
+                await UserManager.UpdateAsync(user);
+            }
+        }
+
         public async Task ChangePassword(string _userId, string _oldPassword, string _newPassword)
         {
             var user = await UserManager.FindByIdAsync(_userId);

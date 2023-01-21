@@ -76,5 +76,17 @@ namespace API.Controllers
         {
             return Ok(await mediator.Send(command));
         }
+
+        [HttpPost, Authorize(Roles = "User")]
+        public async Task<ActionResult> TakePartInEvent([FromBody] ParticipateInEventCommand command)
+        {
+            return Ok(await mediator.Send(command));
+        }
+
+        [HttpPost, Authorize(Roles = "User")]
+        public async Task<ActionResult> NotTakePartInEvent([FromBody] NotParticipateInEventCommand command)
+        {
+            return Ok(await mediator.Send(command));
+        }
     }
 }

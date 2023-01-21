@@ -16,4 +16,6 @@ public interface IUserService
     Task FollowEvent(int eventId);
     Task ChangePassword(string _userId, string _oldPassword, string _newPassword);
     Task UpdateUser(AppUserDto user);
+    Task NotParticipateInEvent(int eventId);
+    Task ParticipateInEvent(int eventId);
 }
