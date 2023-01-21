@@ -9,6 +9,7 @@ namespace Core.Mapper
         public AllMappersProfile()
         {
             CreateMap<AppUser, AppUserDto>();
+            CreateMap<Event, EventDto>();
         }
     }
 }

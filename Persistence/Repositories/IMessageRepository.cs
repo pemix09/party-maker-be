@@ -9,4 +9,5 @@ public interface IMessageRepository : IRepository<Message>
     Task<Message> Get(long id);
     Task<IEnumerable<Message>> GetAllForEvent(int eventId);
     Task<IEnumerable<Message>> GetAllForUser(string userId, int eventId);
+    Task<Message> GetLastMessageForEvent(int eventId);
 }

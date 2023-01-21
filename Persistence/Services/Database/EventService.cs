@@ -3,10 +3,16 @@
     using Persistence.UnitOfWork;
     using Core.Models;
     using Persistence.DbContext;
+    using Core.Dto;
+    using AutoMapper;
 
     public class EventService : ServiceBase
     {
-        public EventService(PartyMakerDbContext _context) : base(_context) { }
+        private readonly IMapper mapper;
+        public EventService(PartyMakerDbContext _context, IMapper _mapper) : base(_context) 
+        { 
+            mapper= _mapper;
+        }
         public async Task AddToDataBase(Event _event)
         {
             await database.Events.Add(_event);
@@ -44,20 +50,43 @@
             return database.Events.GetForArea(latNorth, latSouth, lonEast, lonWest);
         }
 
-        public IEnumerable<Event> GetOrganizedByCurrentUser(string userId)
+        public async Task<IEnumerable<EventDto>> GetOrganizedByCurrentUser(string userId)
         {
-            return database.Events.GetOrganizerEvents(userId);
+            var events =  database.Events.GetOrganizerEvents(userId);
+            var organizes = new List<EventDto>();
+
+            foreach(var party in events)
+            {
+                var eventDto = mapper.Map<EventDto>(party);
+                var lastMessage = await database.Messages.GetLastMessageForEvent(party.Id);
+                if(lastMessage != null)
+                {
+                    eventDto.LastMessage = lastMessage.Content;
+                    eventDto.LastMessageTime = lastMessage.Date;
+                }
+
+                organizes.Add(eventDto);
+            }
+
+            return organizes;
         }
 
-        public async Task<IEnumerable<Event>> GetFollowedEvents(List<int> eventsId)
+        public async Task<IEnumerable<EventDto>> GetEventsByList(List<int> eventsId)
         {
-            List<Event> followed = new List<Event>();
+            List<EventDto> followed = new List<EventDto>();
             
             foreach(var id in eventsId)
             {
-                var searchedEvent = await database.Events.Get(id);
+                var searchedEvent = mapper.Map<EventDto>(await database.Events.Get(id));
+                
                 if(searchedEvent != null)
                 {
+                    var lastMessage = await database.Messages.GetLastMessageForEvent(searchedEvent.Id);
+                    if (lastMessage != null)
+                    {
+                        searchedEvent.LastMessage = lastMessage.Content;
+                        searchedEvent.LastMessageTime = lastMessage.Date;
+                    }
                     followed.Add(searchedEvent);
                 }
             }

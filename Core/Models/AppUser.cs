@@ -14,6 +14,7 @@ public class AppUser : IdentityUser
     public bool? Premium { get; set; }
     public int? BanId { get; set; }
     public List<int>? Followed { get; set; }
+    public List<int>? ParticipatesIn { get; set; }
 
     //TODO
     //public List<int>? Organizes { get; set; }

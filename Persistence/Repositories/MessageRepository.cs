@@ -44,4 +44,12 @@ public class MessageRepository : Repository<Message>, IMessageRepository
                         .ToListAsync();
 
     }
+
+    public async Task<Message> GetLastMessageForEvent(int eventId)
+    {
+        return await PartyMakerDbContext.Messages
+                        .Where(msg => msg.EventId == eventId)
+                        .OrderBy(msg => msg.Date)
+                        .FirstOrDefaultAsync();
+    }
 }

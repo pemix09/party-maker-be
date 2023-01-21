@@ -2,6 +2,8 @@
 
 namespace Application.Event.Queries
 {
+    using AutoMapper;
+    using Core.Dto;
     using Core.Models;
     using Core.Responses;
     using Persistence.Services.Database;
@@ -12,26 +14,34 @@ namespace Application.Event.Queries
         {
             private readonly EventService eventService;
             private readonly IUserService userService;
-            public Handler(EventService _eventService, IUserService _userService)
+            private readonly IMapper mapper;
+            public Handler(EventService _eventService, IUserService _userService, IMapper _mapper)
             {
                 eventService = _eventService;
                 userService = _userService;
+                mapper = _mapper;
             }
 
             public async Task<GetAllEventsForCurrentUserResponse> Handle(GetAllOfCurrentUserQuery request, CancellationToken cancellationToken)
             {
                 var currentUser = await userService.GetCurrentlySignedIn();
-                var organized = eventService.GetOrganizedByCurrentUser(currentUser.Id);
-                IEnumerable<Event> followed = new List<Event>();
+                IEnumerable<EventDto> organized = await eventService.GetOrganizedByCurrentUser(currentUser.Id);
+                IEnumerable<EventDto> followed = new List<EventDto>();
+                IEnumerable<EventDto> participates = new List<EventDto>();
                 if(currentUser.Followed != null)
                 {
-                    followed = await eventService.GetFollowedEvents(currentUser.Followed);
+                    followed = await eventService.GetEventsByList(currentUser.Followed);
+                }
+                if(currentUser.ParticipatesIn != null)
+                {
+                    participates = await eventService.GetEventsByList(currentUser.ParticipatesIn);
                 }
 
                 return new GetAllEventsForCurrentUserResponse()
                 {
                     Organized = organized.ToList(),
-                    Followed = followed.ToList()
+                    Followed = followed.ToList(),
+                    Participates = participates.ToList()
                 };
             }
         }
