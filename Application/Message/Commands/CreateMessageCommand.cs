@@ -24,7 +24,7 @@
                 await new CreateMessageValidator().ValidateAndThrowAsync(request, cancellationToken);
 
                 AppUser sender = await  userService.GetCurrentlySignedIn();
-                Message message = Message.Create(sender.Id, request.EventId, request.Content);
+                Message message = Message.Create(sender.Id, sender.UserName, request.EventId, request.Content);
                 await messageService.AddToDataBase(message);
 
                 return message;
