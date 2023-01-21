@@ -48,6 +48,37 @@ namespace Persistence.Services.Database
             //mailService.SendAccountConfirmation(_newUser.Email);
         }
 
+        public async Task FollowEvent(int eventId)
+        {
+            var user = await GetCurrentlySignedIn();
+
+            //initialize followed
+            if(user != null && user.Followed == null)
+            {
+                user.Followed = new List<int>();
+            }
+            if (user != null && user.Followed.Contains(eventId) == false)
+            {
+                user.Followed.Add(eventId);
+                await userManager.UpdateAsync(user);
+            }
+        }
+
+        public async Task UnFollowEvent(int eventId)
+        {
+            var user = await GetCurrentlySignedIn();
+
+            //initialize followed
+            if (user != null && user.Followed == null)
+            {
+                user.Followed = new List<int>();
+            }
+            if (user != null && user.Followed.Contains(eventId) == true) 
+            {
+                user.Followed.Remove(eventId);
+                await userManager.UpdateAsync(user);
+            }
+        }
         public async Task<LoginResponse> Login(string _email, string _password)
         {
             AppUser user = await userManager.FindByEmailAsync(_email);

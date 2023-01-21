@@ -11,4 +11,6 @@ public interface IUserService
     Task DeleteCurrent();
     Task<AppUser> GetCurrentlySignedIn();
     Task<AppUser> GetUserById(string _Id);
+    Task UnFollowEvent(int eventId);
+    Task FollowEvent(int eventId);
 }

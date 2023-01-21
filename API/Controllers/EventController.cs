@@ -8,6 +8,7 @@ namespace API.Controllers
     using Application.Message.Commands;
     using Microsoft.AspNetCore.Authorization;
     using Application.Event.Queries;
+    using Application.Event.Commands;
 
     //below attribute is for jwt authorization
     [Authorize(AuthenticationSchemes = "Bearer")]
@@ -62,6 +63,18 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<Event>>> GetAllOfCurrentUser([FromQuery] GetAllOfCurrentUserQuery query)
         {
             return Ok(await mediator.Send(query));
+        }
+
+        [HttpPost, Authorize(Roles = "User")]
+        public async Task<ActionResult> FollowEvent([FromBody] FollowEventCommand command)
+        {
+            return Ok(await mediator.Send(command));
+        }
+
+        [HttpPost, Authorize(Roles = "User")]
+        public async Task<ActionResult> UnfollowEvent([FromBody] UnfollowEventCommand command)
+        {
+            return Ok(await mediator.Send(command));
         }
     }
 }
