@@ -1,4 +1,5 @@
-﻿using Core.Models;
+﻿using Core.Dto;
+using Core.Models;
 using Core.UtilityClasses;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -12,11 +13,11 @@ namespace Persistence.Services.Database
 {
     public class UserService : ServiceBase, IUserService
     {
-        private UserManager<AppUser> userManager { get; init; }
-        private SignInManager<AppUser> signInManager { get; init; }
-        private IHttpContextAccessor httpContextAccesor { get; init; }
-        private TokenService tokenService { get; init; }
-        private MailService mailService { get; init; }
+        private UserManager<AppUser> UserManager { get; init; }
+        private SignInManager<AppUser> SignInManager { get; init; }
+        private IHttpContextAccessor HttpContextAccesor { get; init; }
+        private TokenService TokenService { get; init; }
+        private MailService MailService { get; init; }
         private bool stayLoggedAfterClosingBrowser = true;
         private bool lockAccountAfterSignInFailure = false;
         public UserService(
@@ -27,25 +28,59 @@ namespace Persistence.Services.Database
             TokenService _tokenService,
             MailService _emailService) : base(_context)
         {
-            userManager = _userManager;
-            signInManager = _signInManager;
-            httpContextAccesor = _httpContextAccesor;
-            tokenService = _tokenService;
-            mailService = _emailService;
+            UserManager = _userManager;
+            SignInManager = _signInManager;
+            HttpContextAccesor = _httpContextAccesor;
+            TokenService = _tokenService;
+            MailService = _emailService;
         }
 
         public async Task Register(AppUser _newUser, string _password)
         {
-            var result = await userManager.CreateAsync(_newUser);
+            var result = await UserManager.CreateAsync(_newUser);
 
             if (!result.Succeeded)
             {
                 throw new UserCannotBeCreatedException(result.Errors);
             }
 
-            await userManager.AddPasswordAsync(_newUser, _password);
-            await userManager.AddToRoleAsync(_newUser, "User");
+            await UserManager.AddPasswordAsync(_newUser, _password);
+            await UserManager.AddToRoleAsync(_newUser, "User");
             //mailService.SendAccountConfirmation(_newUser.Email);
+        }
+
+        public async Task ChangePassword(string _userId, string _oldPassword, string _newPassword)
+        {
+            var user = await UserManager.FindByIdAsync(_userId);
+            if(user != null)
+            {
+                await UserManager.ChangePasswordAsync(user, _oldPassword, _newPassword);
+            }
+        }
+
+        public async Task UpdateUser(AppUserDto user)
+        {
+            var userToUpdate = await UserManager.FindByIdAsync(user.Id);
+
+            if(userToUpdate == null)
+            {
+                return;
+            }
+            if(userToUpdate.UserName != user.UserName)
+            {
+                var isUserNameTaken = await UserManager.FindByNameAsync(user.UserName);
+                if(isUserNameTaken != null)
+                {
+                    throw new System.ComponentModel.DataAnnotations.ValidationException();
+                }
+                userToUpdate.UserName = user.UserName;
+            }
+            if(userToUpdate.Photo != user.Photo)
+            {
+                userToUpdate.Photo = user.Photo;
+            }
+
+            await UserManager.UpdateAsync(userToUpdate);
         }
 
         public async Task FollowEvent(int eventId)
@@ -60,7 +95,7 @@ namespace Persistence.Services.Database
             if (user != null && user.Followed.Contains(eventId) == false)
             {
                 user.Followed.Add(eventId);
-                await userManager.UpdateAsync(user);
+                await UserManager.UpdateAsync(user);
             }
         }
 
@@ -76,12 +111,12 @@ namespace Persistence.Services.Database
             if (user != null && user.Followed.Contains(eventId) == true) 
             {
                 user.Followed.Remove(eventId);
-                await userManager.UpdateAsync(user);
+                await UserManager.UpdateAsync(user);
             }
         }
         public async Task<LoginResponse> Login(string _email, string _password)
         {
-            AppUser user = await userManager.FindByEmailAsync(_email);
+            AppUser user = await UserManager.FindByEmailAsync(_email);
 
             if (user == null)
             {
@@ -90,18 +125,18 @@ namespace Persistence.Services.Database
 
             if(user.RefreshToken == null)
             {
-                var refreshToken = tokenService.CreateRefreshToken();
+                var refreshToken = TokenService.CreateRefreshToken();
                 user.SetRefreshToken(refreshToken);
             }
             else if(user.RefreshTokenExpires <= DateTime.Now)
             {
-                user.RefreshTokenExpires = tokenService.GetNewRefreshTokenExpirationDate();
+                user.RefreshTokenExpires = TokenService.GetNewRefreshTokenExpirationDate();
             }
 
-            var accessToken = await tokenService.CreateAccessToken(user);
+            var accessToken = await TokenService.CreateAccessToken(user);
             user.SetAccessToken(accessToken);
 
-            await userManager.UpdateAsync(user);
+            await UserManager.UpdateAsync(user);
 
             var refreshTokenFromUser = new RefreshToken()
             {
@@ -118,7 +153,7 @@ namespace Persistence.Services.Database
         {
             AppUser user = await GetCurrentlySignedIn();
             user.RefreshToken = String.Empty;
-            await userManager.UpdateAsync(user);
+            await UserManager.UpdateAsync(user);
         }
 
         public async Task DeleteCurrent()
@@ -127,15 +162,15 @@ namespace Persistence.Services.Database
    
             string userId = user.Id;
 
-            await userManager.DeleteAsync(user);
+            await UserManager.DeleteAsync(user);
             await database.Events.RemoveAllForUser(userId);
         }
         public async Task<AppUser> GetCurrentlySignedIn()
         {
             try
             {
-                var name = httpContextAccesor.HttpContext.User.Identity.Name;
-                AppUser currentUser = await userManager.FindByNameAsync(name);
+                var name = HttpContextAccesor.HttpContext.User.Identity.Name;
+                AppUser currentUser = await UserManager.FindByNameAsync(name);
                 return currentUser;
             }
             catch
@@ -146,7 +181,7 @@ namespace Persistence.Services.Database
 
         public async Task<AppUser> GetUserById(string _Id)
         {
-            AppUser user = await userManager.FindByIdAsync(_Id);
+            AppUser user = await UserManager.FindByIdAsync(_Id);
 
             if (user == null)
             {

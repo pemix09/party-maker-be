@@ -76,5 +76,17 @@ namespace API.Controllers
         {
             return Ok(await mediator.Send(query));
         }
+
+        [HttpPost, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            return Ok(await mediator.Send(command));
+        }
+
+        [HttpPost, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult> UpdateUser([FromBody] UpdateUserCommand command)
+        {
+            return Ok(await mediator.Send(command));
+        }
     }
 }

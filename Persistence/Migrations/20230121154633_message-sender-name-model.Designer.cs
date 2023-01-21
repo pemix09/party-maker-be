@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence.DbContext;
@@ -12,9 +13,10 @@ using Persistence.DbContext;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(PartyMakerDbContext))]
-    partial class PartyMakerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230121154633_message-sender-name-model")]
+    partial class messagesendernamemodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,7 +162,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bans", (string)null);
+                    b.ToTable("Bans");
                 });
 
             modelBuilder.Entity("Core.Models.EntrancePass", b =>
@@ -180,7 +182,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EntrancePasses", (string)null);
+                    b.ToTable("EntrancePasses");
                 });
 
             modelBuilder.Entity("Core.Models.Event", b =>
@@ -235,7 +237,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("Core.Models.Message", b =>
@@ -269,7 +271,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Core.Models.MusicGenre", b =>
@@ -286,7 +288,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MusicGenres", (string)null);
+                    b.ToTable("MusicGenres");
                 });
 
             modelBuilder.Entity("Core.Models.Notification", b =>
@@ -315,7 +317,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Core.Models.Report", b =>
@@ -343,7 +345,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reports", (string)null);
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

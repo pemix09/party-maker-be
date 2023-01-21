@@ -1,3 +1,4 @@
+using Core.Dto;
 using Core.Models;
 using Core.UtilityClasses;
 
@@ -13,4 +14,6 @@ public interface IUserService
     Task<AppUser> GetUserById(string _Id);
     Task UnFollowEvent(int eventId);
     Task FollowEvent(int eventId);
+    Task ChangePassword(string _userId, string _oldPassword, string _newPassword);
+    Task UpdateUser(AppUserDto user);
 }
