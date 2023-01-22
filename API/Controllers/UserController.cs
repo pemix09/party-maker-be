@@ -88,5 +88,11 @@ namespace API.Controllers
         {
             return Ok(await mediator.Send(command));
         }
+
+        [HttpGet, Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult<IEnumerable<AppUserDto>>> GetByList([FromQuery] GetManyUsersQuery query)
+        {
+            return Ok(await mediator.Send(query));
+        }
     }
 }

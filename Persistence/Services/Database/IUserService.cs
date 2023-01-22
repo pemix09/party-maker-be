@@ -18,4 +18,5 @@ public interface IUserService
     Task UpdateUser(AppUserDto user);
     Task NotParticipateInEvent(int eventId);
     Task ParticipateInEvent(int eventId);
+    Task<IEnumerable<AppUserDto>> GetMany(IEnumerable<string> usersIds);
 }

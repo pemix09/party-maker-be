@@ -1,4 +1,5 @@
-﻿using Core.Dto;
+﻿using AutoMapper;
+using Core.Dto;
 using Core.Models;
 using Core.UtilityClasses;
 using Microsoft.AspNetCore.Authentication;
@@ -17,6 +18,7 @@ namespace Persistence.Services.Database
         private SignInManager<AppUser> SignInManager { get; init; }
         private IHttpContextAccessor HttpContextAccesor { get; init; }
         private TokenService TokenService { get; init; }
+        private IMapper Mapper { get; init; }
         private MailService MailService { get; init; }
         private bool stayLoggedAfterClosingBrowser = true;
         private bool lockAccountAfterSignInFailure = false;
@@ -26,13 +28,15 @@ namespace Persistence.Services.Database
             SignInManager<AppUser> _signInManager,
             IHttpContextAccessor _httpContextAccesor,
             TokenService _tokenService,
-            MailService _emailService) : base(_context)
+            MailService _emailService,
+            IMapper _mapper) : base(_context)
         {
             UserManager = _userManager;
             SignInManager = _signInManager;
             HttpContextAccesor = _httpContextAccesor;
             TokenService = _tokenService;
             MailService = _emailService;
+            Mapper = _mapper;
         }
 
         public async Task Register(AppUser _newUser, string _password)
@@ -144,6 +148,18 @@ namespace Persistence.Services.Database
                 user.Followed.Remove(eventId);
                 await UserManager.UpdateAsync(user);
             }
+        }
+
+        public async Task<IEnumerable<AppUserDto>> GetMany(IEnumerable<string> usersIds)
+        {
+            var toReturn = new List<AppUserDto>();
+            foreach(var userId in usersIds)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+                var dto = Mapper.Map<AppUserDto>(user);
+                toReturn.Add(dto);
+            }
+            return toReturn;
         }
         public async Task<LoginResponse> Login(string _email, string _password)
         {
