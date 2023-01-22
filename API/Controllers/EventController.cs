@@ -60,7 +60,7 @@ namespace API.Controllers
         }
 
         [HttpGet, Authorize(Roles = "User")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetByQuery([FromQuery] GetEventsByQuery query)
+        public async Task<ActionResult<IEnumerable<Event>>> GetByQuery([FromQuery] GetEventsByNameQuery query)
         {
             return Ok(await mediator.Send(query));
         }

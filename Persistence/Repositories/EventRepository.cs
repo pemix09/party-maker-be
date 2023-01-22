@@ -56,6 +56,6 @@ public class EventRepository : Repository<Event>, IEventRepository
 
     public IEnumerable<Event> GetByQuery(string query)
     {
-        return PartyMakerDbContext.Events.Where(party => party.Name.StartsWith(query)).ToList();
+        return PartyMakerDbContext.Events.Where(party => party.Name.ToLower().StartsWith(query.ToLower())).ToList();
     }
 }
