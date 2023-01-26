@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Persistence.Services.Database;
+using Persistence.Exceptions;
 
 namespace Application.Event.Commands
 {
@@ -19,7 +20,13 @@ namespace Application.Event.Commands
 
             public async Task<Unit> Handle(NotParticipateInEventCommand request, CancellationToken cancellationToken)
             {
+                var user = await userService.GetCurrentlySignedIn();
+                if(user == null)
+                {
+                    throw new UserNotAuthenticatedException();
+                }
                 await userService.NotParticipateInEvent(request.EventToNotParticipate);
+                await eventService.NotParticipateInEvent(user.Id, request.EventToNotParticipate);
 
                 return Unit.Value;
             }

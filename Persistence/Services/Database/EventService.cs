@@ -70,6 +70,20 @@
             party.ParticipatorsIds.Add(userId);
             await database.Complete();
         }
+        public async Task NotParticipateInEvent(string userId, int eventId)
+        {
+            var party = await database.Events.Get(eventId);
+            if (party == null)
+            {
+                throw new EventNotFoundException();
+            }
+
+            if (party.ParticipatorsIds != null && party.ParticipatorsIds.Contains(userId))
+            {
+                party.ParticipatorsIds.Remove(userId);
+            }
+            await database.Complete();
+        }
         public async Task<IEnumerable<EventDto>> GetOrganizedByCurrentUser(string userId)
         {
             var events =  database.Events.GetOrganizerEvents(userId);
