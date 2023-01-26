@@ -52,11 +52,12 @@ public class Event
         int musicGenreId,
         string type,
         double latitude,
-        double longitude)
+        double longitude,
+        DateTimeOffset date)
     {
         this.Name = name;
         this.Description = description;
-        this.Date = DateTime.Now;
+        this.Date = date;
         this.Place = place;
         this.OrganizerId = organizerId;
         this.PassId = pass;
@@ -77,9 +78,10 @@ public class Event
         int musicGenreId,
         string type,
         double latitude,
-        double longitude
+        double longitude,
+        DateTimeOffset date
     )
     {
-        return new Event(name, description, place, organizerId, EntrancePassId, photo, musicGenreId, type, latitude, longitude) ;
+        return new Event(name, description, place, organizerId, EntrancePassId, photo, musicGenreId, type, latitude, longitude, date) ;
     }
 }

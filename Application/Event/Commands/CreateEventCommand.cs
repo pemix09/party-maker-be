@@ -19,6 +19,7 @@ public class CreateEventCommand : IRequest<Unit>
     public string Type { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public DateTimeOffset Date { get; set; }
 
     public class Handler : IRequestHandler<CreateEventCommand, Unit>
     {
@@ -45,7 +46,8 @@ public class CreateEventCommand : IRequest<Unit>
                 request.MusicGenreId,
                 request.Type,
                 request.Latitude,
-                request.Longitude);
+                request.Longitude,
+                request.Date);
 
             await eventService.AddToDataBase(_event);
 
