@@ -93,29 +93,15 @@ namespace Persistence.Services.Database
             }
         }
 
-        public async Task UpdateUser(AppUserDto user)
+        public async Task UpdateUser(AppUser user)
         {
-            var userToUpdate = await UserManager.FindByIdAsync(user.Id);
+            var userWithSameNickName = await UserManager.FindByNameAsync(user.UserName);
 
-            if(userToUpdate == null)
+            if(userWithSameNickName != null)
             {
-                return;
+                throw new UserWithSameNickNameExistsException();
             }
-            if(userToUpdate.UserName != user.UserName)
-            {
-                var isUserNameTaken = await UserManager.FindByNameAsync(user.UserName);
-                if(isUserNameTaken != null)
-                {
-                    throw new System.ComponentModel.DataAnnotations.ValidationException();
-                }
-                userToUpdate.UserName = user.UserName;
-            }
-            if(userToUpdate.Photo != user.Photo)
-            {
-                userToUpdate.Photo = user.Photo;
-            }
-
-            await UserManager.UpdateAsync(userToUpdate);
+            await UserManager.UpdateAsync(user);
         }
 
         public async Task FollowEvent(int eventId)

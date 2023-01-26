@@ -1,6 +1,6 @@
 ﻿namespace Persistence.Services.Database
 {
-    using Persistence.UnitOfWork;
+    using Persistence.Exceptions;
     using Core.Models;
     using Persistence.DbContext;
     using Core.Dto;
@@ -54,6 +54,22 @@
             return database.Events.GetForArea(latNorth, latSouth, lonEast, lonWest);
         }
 
+        public async Task ParticipateInEvent(string userId, int eventId)
+        {
+            var party = await database.Events.Get(eventId);
+            if(party == null)
+            {
+                throw new EventNotFoundException();
+            }
+
+            if(party.ParticipatorsIds == null)
+            {
+                party.ParticipatorsIds = new();
+            }
+
+            party.ParticipatorsIds.Add(userId);
+            await database.Complete();
+        }
         public async Task<IEnumerable<EventDto>> GetOrganizedByCurrentUser(string userId)
         {
             var events =  database.Events.GetOrganizerEvents(userId);

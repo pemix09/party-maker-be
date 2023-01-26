@@ -19,7 +19,9 @@ namespace Application.Event.Commands
 
             public async Task<Unit> Handle(ParticipateInEventCommand request, CancellationToken cancellationToken)
             {
+                var user = await userService.GetCurrentlySignedIn();
                 await userService.ParticipateInEvent(request.EventToParticipate);
+                await eventService.ParticipateInEvent(user.Id, request.EventToParticipate);
 
                 return Unit.Value;
             }
