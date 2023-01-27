@@ -71,6 +71,12 @@ namespace API.Controllers
             return Ok(await mediator.Send(query));
         }
 
+        [HttpGet, Authorize(Roles = "User")]
+        public async Task<ActionResult<IEnumerable<MusicGenre>>> GetAllMusicGenres([FromQuery] GetAllMusicGenresQuery query)
+        {
+            return Ok(await mediator.Send(query));
+        }
+
         [HttpPost, Authorize(Roles = "User")]
         public async Task<ActionResult> FollowEvent([FromBody] FollowEventCommand command)
         {
