@@ -7,8 +7,8 @@ namespace Application.User.Commands
 {
     public class UpdateUserCommand : IRequest<Unit>
     {
-        public string newUserName { get; set; }
-        public string newPhoto { get; set; }
+        public string? newUserName { get; set; }
+        public string? newPhoto { get; set; }
 
         public class Handler : IRequestHandler<UpdateUserCommand, Unit>
         {
