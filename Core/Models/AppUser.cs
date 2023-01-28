@@ -7,7 +7,6 @@ namespace Core.Models;
 public class AppUser : IdentityUser
 {
     public string? Photo { get; set; }
-    public string? Avatar { get; set; }
     public float? AvarageRating { get; set; }
     public int? AmmountOfRatings { get; set; }
     public float[]? Ratings { get; set; }

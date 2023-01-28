@@ -97,7 +97,7 @@ namespace Persistence.Services.Database
         {
             var userWithSameNickName = await UserManager.FindByNameAsync(user.UserName);
 
-            if(userWithSameNickName != null)
+            if(userWithSameNickName != null && userWithSameNickName.Email != user.Email)
             {
                 throw new UserWithSameNickNameExistsException();
             }
