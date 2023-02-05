@@ -6,9 +6,9 @@ namespace Persistence.Exceptions
     public class UserCannotBeSignInException : BaseAppException
     {
         private int errorCode = 401;
-        public UserCannotBeSignInException(string _userName) : base()
+        public UserCannotBeSignInException(string _userName, string _reason) : base()
         {
-            message = $"{_userName} cannot be signed in!";
+            message = $"{_userName} cannot be signed in, reason: {_reason}!";
             code = errorCode;
         }
 

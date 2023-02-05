@@ -155,6 +155,11 @@ namespace Persistence.Services.Database
             {
                 throw new UserEmailNotFoundException(_email);
             }
+            var loginResult = await SignInManager.PasswordSignInAsync(user, _password, stayLoggedAfterClosingBrowser, lockAccountAfterSignInFailure);
+            if(loginResult.Succeeded == false)
+            {
+                throw new UserCannotBeSignInException(user.UserName, "invalid password");
+            }
 
             if(user.RefreshToken == null)
             {
